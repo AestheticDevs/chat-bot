@@ -1,6 +1,6 @@
 import { SidebarComponent } from "@/components/admin/Sidebar";
 import { Header } from "@/components/admin/Header";
-import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";
+// import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";
 
 const layout = ({
   children,
@@ -10,14 +10,10 @@ const layout = ({
   return (
     <>
       <Header />
-      <div className="flex h-full flex-col overflow-hidden p-4">
+      <div className="flex h-full flex-col overflow-hidden bg-slate-100 p-6">
         {/* Main Area */}
         <div className="mx-auto flex h-full w-full flex-1">
           {/* Sidebar */}
-          {/* <SidebarProvider>
-            <SidebarComponent />
-          </SidebarProvider> */}
-
           <SidebarComponent />
 
           {/* Page Content */}

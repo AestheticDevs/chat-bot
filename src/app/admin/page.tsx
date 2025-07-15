@@ -1,20 +1,38 @@
-import { LucideBot } from "lucide-react";
+import { Card } from "@/components/admin/Card";
 
 const page = () => {
+  const items = [
+    {
+      id: 1,
+      name: "Geen",
+      company: "Google",
+    },
+    {
+      id: 2,
+      name: "Kamila",
+      company: "Microsoft",
+    },
+    {
+      id: 3,
+      name: "Amanda",
+      company: "Amazon",
+    },
+    {
+      id: 4,
+      name: "Zack",
+      company: "Facebook",
+    },
+  ];
+
   return (
     // Wrapper
     <div className="w-full">
       <div className="text-2xl font-bold">Set up your Chat Bot</div>
 
-      <div className="mt-6 grid grid-cols-4">
-        {/* Card */}
-        <div className="bg-slate-100te rounded-2xl border-2 border-white p-5">
-          <div className="flex items-center justify-between">
-            <div className="text-primary-brand flex h-10 w-10 items-center justify-center rounded-full bg-white">
-              <LucideBot />
-            </div>
-          </div>
-        </div>
+      <div className="mt-6 grid grid-cols-4 gap-4">
+        {items.map((item, index) => (
+          <Card key={index} name={item.name} company={item.company} />
+        ))}
       </div>
     </div>
   );

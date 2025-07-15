@@ -102,7 +102,7 @@ export const SidebarComponent = () => {
         {/* Menu */}
         <SidebarProvider>
           <nav className="w-full">
-            <ul className="mt-4 space-y-1">
+            <ul className="mt-4 space-y-2">
               {items.map((item) => (
                 <li key={item.title} className="block">
                   <a

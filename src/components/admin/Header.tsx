@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 
 export const Header = () => {
   return (
-    <header className="sticky top-0 z-50 flex border p-4 backdrop-blur-xs dark:bg-gray-800">
+    <header className="sticky top-0 z-50 flex border bg-slate-100 p-4 backdrop-blur-xs dark:bg-gray-800">
       <div className="mx-auto w-full">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
