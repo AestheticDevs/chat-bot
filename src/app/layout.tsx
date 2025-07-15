@@ -1,11 +1,11 @@
+// src/app/layout.tsx
+import "./globals.css";
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
-import "./globals.css";
-import { Header } from "@/components/public/Header";
 
-const monsSans = Montserrat({
-  variable: "--font-montserrat-sans",
+const montserrat = Montserrat({
   subsets: ["latin"],
+  variable: "--font-montserrat",
 });
 
 export const metadata: Metadata = {
@@ -15,15 +15,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body className={`${monsSans.variable}`}>
-        <Header />
-        {children}
-      </body>
+      <body className={montserrat.variable}>{children}</body>
     </html>
   );
 }

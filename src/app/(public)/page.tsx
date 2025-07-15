@@ -20,9 +20,8 @@ export default function Home() {
           alt=""
           src={"/bg-img-landing.png"}
           className="absolute top-0 left-0 -z-10 w-full"
-          width={100}
-          height={100}
-          sizes="100"
+          fill
+          unoptimized
         ></Image>
         <Image
           alt=""
@@ -30,7 +29,7 @@ export default function Home() {
           className="w-full"
           width={400}
           height={400}
-          sizes="100%"
+          unoptimized
         ></Image>{" "}
       </div>
     </section>

@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-primary-brand: oklch(0.225 0.146 265.82);
+  --color-primary-brand: oklch(0.4213 0.2143 271.85);
   --color-secondary-brand: oklch(0.5728 0.2203 276.05);
   --color-accent-brand: oklch(0.7746 0.1179 282.22);
 }
@@ -49,10 +49,12 @@
 
 body {
   background: #FAFBFF;
-  font-family: var(--font-montserrat-sans) !important;
+  font-family: var(--font-montserrat) !important;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
 }
-
-
 
 section {
   padding: 80px 0;
