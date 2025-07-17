@@ -1,5 +1,3 @@
-import { SendIcon } from "lucide-react";
-
 type PageProps = {
   params: {
     id: string;
@@ -10,11 +8,11 @@ export default function page({ params }: PageProps) {
   return (
     // Wrapper
     <div className="w-full">
-      <div className="text-2xl font-bold">Preview</div>
+      <div className="text-2xl font-bold">Customize</div>
 
       <div className="mt-6 grid grid-cols-1">
         {/* Chatbox Preview */}
-        <div className="max-w-lg overflow-hidden rounded-3xl bg-white shadow-xl shadow-slate-200/50">
+        <div className="overflow-hidden rounded-3xl bg-white shadow-xl shadow-slate-200/50">
           {/* Header */}
           <div className="bg-primary-brand flex p-5">
             <div className="text-xl font-semibold text-white">Agent Geen</div>
@@ -25,16 +23,11 @@ export default function page({ params }: PageProps) {
             {/* Message Container */}
             <div className="flex-1 overflow-y-auto"></div>
 
-            <form action="">
-              <div className="flex items-center rounded-md border pe-4">
-                <input
-                  type="text"
-                  className="w-full p-4 outline-0"
-                  placeholder="Text me"
-                />
-                <SendIcon className="cursor-pointer text-slate-400 hover:text-slate-600" />
-              </div>
-            </form>
+            <input
+              type="text"
+              className="sticky bottom-0 rounded-md border p-4"
+              placeholder="Text me"
+            />
           </div>
 
           {/* Footer */}

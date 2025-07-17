@@ -28,52 +28,74 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 
 export const SidebarComponent = () => {
+  // const id = params;
+
+  const onPath = usePathname();
+  const isInAgentSection =
+    onPath.startsWith("/admin/") && onPath !== "/admin/dashboard";
+
+  const pathSegments = onPath.split("/");
+  const currentId = pathSegments[2];
+
+  console.log(currentId);
+
   const agent = {
     name: "Geen",
     company: "Google",
   };
 
   // Menu items.
-  const items = [
-    {
-      title: "Dashboard",
-      url: "/admin/dashboard",
-      icon: LayoutDashboard,
-    },
+  const dashboardItem = {
+    title: "Dashboard",
+    url: "/admin/dashboard",
+    icon: LayoutDashboard,
+    match: (path: string) => path === "/admin/dashboard",
+  };
+
+  const agentMenus = [
     {
       title: "Preview",
-      url: "#",
+      url: `/admin/${currentId}/preview`,
       icon: Eye,
+      match: (path: string) =>
+        path.includes("/admin/") && path.endsWith("/preview"),
     },
     {
       title: "Settings",
-      url: "#",
+      url: `/admin/${currentId}/settings`,
       icon: Settings,
+      match: (path: string) =>
+        path.includes("/admin/") && path.endsWith("/settings"),
     },
     {
       title: "Customize",
-      url: "#",
+      url: `/admin/${currentId}/customize`,
       icon: Edit,
+      match: (path: string) =>
+        path.includes("/admin/") && path.endsWith("/customize"),
     },
     {
       title: "Data Source",
-      url: "#",
+      url: `/admin/${currentId}/data-source`,
       icon: Database,
+      match: (path: string) =>
+        path.includes("/admin/") && path.endsWith("/data-source"),
     },
     {
       title: "Inbox",
-      url: "#",
+      url: `/admin/${currentId}/inbox`,
       icon: Mail,
+      match: (path: string) =>
+        path.includes("/admin/") && path.endsWith("/inbox"),
     },
     {
       title: "Embed",
-      url: "#",
+      url: `/admin/${currentId}/embed`,
       icon: Paperclip,
+      match: (path: string) =>
+        path.includes("/admin/") && path.endsWith("/embed"),
     },
   ];
-
-  const onPath = usePathname();
-  console.log(onPath);
 
   return (
     <aside
@@ -82,13 +104,15 @@ export const SidebarComponent = () => {
       )}
     >
       <div className="text-center">
-        <Avatar>
-          <AvatarImage
-            src="https://github.com/shadcn.png"
-            className="rounded-full"
-          />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
+        <div className="p-4">
+          <Avatar className="aspect-square h-16 w-16">
+            <AvatarImage
+              src="https://github.com/shadcn.png"
+              className="rounded-full"
+            />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+        </div>
 
         {/* Name */}
         <div className="mt-3 text-lg font-semibold text-nowrap text-slate-800">
@@ -103,17 +127,40 @@ export const SidebarComponent = () => {
         <SidebarProvider>
           <nav className="w-full">
             <ul className="mt-4 space-y-2">
-              {items.map((item) => (
-                <li key={item.title} className="block">
-                  <a
-                    href={item.url}
-                    className={`${item.url === onPath ? "text-primary-brand font-semibold" : "text-slate-600"} group flex w-full items-center rounded-lg p-2 text-left text-sm font-medium hover:bg-slate-100 hover:text-slate-900`}
-                  >
-                    <item.icon className="group-hover:fill-primary-brand/20 mr-2 h-5 w-5 flex-none" />
-                    <span className={`truncate text-sm`}>{item.title}</span>
-                  </a>
-                </li>
-              ))}
+              {/* Always show dashboard */}
+              <li key={dashboardItem.title}>
+                <a
+                  href={dashboardItem.url}
+                  className={`${
+                    dashboardItem.match(onPath)
+                      ? "text-primary-brand ps-3 font-semibold"
+                      : "text-slate-600"
+                  } group flex w-full items-center rounded-lg p-2 text-left text-sm font-medium hover:bg-slate-100 hover:text-slate-900`}
+                >
+                  <dashboardItem.icon className="group-hover:fill-primary-brand/20 mr-2 h-5 w-5 flex-none" />
+                  <span className={`truncate text-sm`}>
+                    {dashboardItem.title}
+                  </span>
+                </a>
+              </li>
+
+              {/* Only show agent-related menus when in /admin/${currentId}/... */}
+              {isInAgentSection &&
+                agentMenus.map((item) => (
+                  <li key={item.title}>
+                    <a
+                      href={item.url}
+                      className={`${
+                        item.match?.(onPath)
+                          ? "text-primary-brand ps-3 font-semibold"
+                          : "text-slate-600"
+                      } group flex w-full items-center rounded-lg p-2 text-left text-sm font-medium duration-150 ease-in hover:bg-slate-100 hover:ps-3 hover:text-slate-900`}
+                    >
+                      <item.icon className="group-hover:fill-primary-brand/20 mr-2 h-5 w-5 flex-none" />
+                      <span className={`truncate text-sm`}>{item.title}</span>
+                    </a>
+                  </li>
+                ))}
             </ul>
           </nav>
         </SidebarProvider>
