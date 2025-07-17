@@ -1,5 +1,11 @@
 "use client";
 
+type PageProps = {
+  params: {
+    id: string;
+  };
+};
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +26,7 @@ import {
   MessageCircleMoreIcon,
 } from "lucide-react";
 
-export default function Page({ params }: { params: { id: string } }) {
+export default async function Page({ params }: PageProps) {
   const [isOpenDialog, setIsOpenDialog] = useState(false);
 
   return (
