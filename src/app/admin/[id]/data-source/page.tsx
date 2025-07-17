@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/table";
 
 import { useParams } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
 
 export default function Page() {
   const params = useParams();
@@ -44,22 +45,36 @@ export default function Page() {
       </div>
       <div className="mt-6 grid grid-cols-1">
         <Table>
-          <TableCaption>A list of your recent invoices.</TableCaption>
-          <TableHeader>
+          <TableCaption className="mt-4">
+            A list of your trained data source.
+          </TableCaption>
+          <TableHeader className="h-14 bg-white">
             <TableRow>
-              <TableHead className="w-[100px]">Invoice</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Method</TableHead>
-              <TableHead className="text-right">Amount</TableHead>
+              <TableHead className="w-12 text-center">#</TableHead>
+              <TableHead>Trained Items</TableHead>
+              <TableHead className="text-center">Type</TableHead>
+              <TableHead className="text-center">Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow>
-              <TableCell className="font-medium">INV001</TableCell>
-              <TableCell>Paid</TableCell>
-              <TableCell>Credit Card</TableCell>
-              <TableCell className="text-right">$250.00</TableCell>
-            </TableRow>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <TableRow
+                key={i}
+                className="h-14 even:bg-slate-200 hover:bg-slate-50"
+              >
+                <TableCell className="text-center font-medium">
+                  {i + 1}
+                </TableCell>
+                <TableCell>
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad,
+                  ipsa!
+                </TableCell>
+                <TableCell className="text-center">Document</TableCell>
+                <TableCell className="text-center">
+                  <Badge className="bg-teal-500">Trained</Badge>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>

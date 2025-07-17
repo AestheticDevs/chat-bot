@@ -15,7 +15,7 @@ export const Header = () => {
             </a>
           </div>
           <nav className="flex space-x-1">
-            <Link href="/admin">
+            <Link href="/admin/dashboard">
               <Button variant={"accent"}>Sign In</Button>
             </Link>
             <Button>Register</Button>
