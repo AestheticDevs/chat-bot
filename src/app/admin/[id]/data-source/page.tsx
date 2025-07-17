@@ -20,13 +20,7 @@ import {
   MessageCircleMoreIcon,
 } from "lucide-react";
 
-type PageProps = {
-  params: {
-    id: string;
-  };
-};
-
-export default function page({ params }: PageProps) {
+export default function Page({ params }: { params: { id: string } }) {
   const [isOpenDialog, setIsOpenDialog] = useState(false);
 
   return (
