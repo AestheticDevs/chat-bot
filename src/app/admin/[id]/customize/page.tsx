@@ -1,14 +1,9 @@
-type PageProps = {
-  params: {
-    id: string;
-  };
-};
+export default async function Page(props: any) {
+  const id = props?.params?.id;
 
-export default async function Page({ params }: PageProps) {
   return (
-    // Wrapper
     <div className="w-full">
-      <div className="text-2xl font-bold">Customize {params.id}</div>
+      <div className="text-2xl font-bold">Customize {id}</div>
 
       <div className="mt-6 grid grid-cols-1">
         {/* Chatbox Preview */}
@@ -20,7 +15,6 @@ export default async function Page({ params }: PageProps) {
 
           {/* Text Box */}
           <div className="relative flex h-[500px] flex-col gap-4 bg-neutral-50 p-5">
-            {/* Message Container */}
             <div className="flex-1 overflow-y-auto"></div>
 
             <input

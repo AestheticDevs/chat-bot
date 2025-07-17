@@ -1,12 +1,8 @@
 import { SendIcon } from "lucide-react";
 
-type PageProps = {
-  params: {
-    id: string;
-  };
-};
+export default async function Page(props: any) {
+  const id = props?.params?.id;
 
-export default async function Page({ params }: PageProps) {
   return (
     // Wrapper
     <div className="w-full">
