@@ -83,11 +83,11 @@ export default function Page() {
         <DialogContent className="rounded-xl bg-slate-50 ring ring-white">
           <DialogHeader>
             <DialogTitle>Add data source</DialogTitle>
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              <Button variant={"outline"} className="h-32 flex-col rounded-lg">
+            <div className="mt-4 grid grid-cols-3 gap-2">
+              {/* <Button variant={"outline"} className="h-32 flex-col rounded-lg">
                 <GlobeIcon className="text-primary-brand size-6" />
                 <div className="mt-1.5 text-base">Website</div>
-              </Button>
+              </Button> */}
               <Button variant={"outline"} className="h-32 flex-col rounded-lg">
                 <FileIcon className="text-primary-brand size-6" />
                 <div className="mt-1.5 text-base">File</div>

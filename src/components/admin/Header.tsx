@@ -11,7 +11,11 @@ export const Header = () => {
               href="/"
               className="text-2xl font-bold text-gray-900 dark:text-white"
             >
-              MyApp
+              <img
+                src="/logo-ksps.png
+              "
+                alt=""
+              />
             </a>
           </div>
           <nav className="flex space-x-1">
