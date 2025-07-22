@@ -55,7 +55,7 @@ export default function LoginForm() {
       </form>
 
       {error && (
-        <div className="absolute left-0 mt-2 w-full place-items-center text-center text-sm text-rose-400">
+        <div className="absolute left-0 mt-2 w-full place-items-center text-center text-sm text-rose-300">
           {error}
         </div>
       )}
