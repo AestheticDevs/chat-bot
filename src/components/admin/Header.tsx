@@ -1,5 +1,16 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "../ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
+import { logoutAction } from "@/app/action/auth";
 
 export const Header = () => {
   return (
@@ -18,12 +29,19 @@ export const Header = () => {
               />
             </a>
           </div>
-          <nav className="flex space-x-1">
-            <Link href="/admin">
-              <Button variant={"accent"}>Sign In</Button>
-            </Link>
-            <Button>Register</Button>
-          </nav>
+
+          <Button onClick={() => logoutAction()}>Logout </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem>Billing</DropdownMenuItem>
+              <DropdownMenuItem>Team</DropdownMenuItem>
+              <DropdownMenuItem>Subscription</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>

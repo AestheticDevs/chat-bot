@@ -43,8 +43,8 @@ export default async function Page() {
               place it anywhere on the page if modifying the{` <head>`} code is
               not possible.
             </p>
-            <div className="relative mt-5 max-w-5xl rounded-2xl bg-slate-700 p-2">
-              <div className="p-3 text-xs font-medium text-white/60">
+            <div className="relative mt-5 max-w-5xl rounded-2xl bg-slate-700 p-1.5">
+              <div className="mb-2 p-3 text-xs font-medium text-white/60">
                 script
               </div>
               <CopyButton textToCopy={scriptCode} />
@@ -61,8 +61,8 @@ export default async function Page() {
             <p className="text-sm">
               You can share Geen AI with your desired visitor via this link.
             </p>
-            <div className="relative mt-5 max-w-5xl rounded-2xl bg-slate-700 p-2">
-              <div className="p-3 text-xs font-medium text-white/60">
+            <div className="relative mt-5 max-w-5xl rounded-2xl bg-slate-700 p-1.5">
+              <div className="mb-2 p-3 text-xs font-medium text-white/60">
                 script
               </div>
               <CopyButton textToCopy={scriptFullPage} />
@@ -80,8 +80,8 @@ export default async function Page() {
               Paste (embed) this code snippet where you want to show the chat
               widget.
             </p>
-            <div className="relative mt-5 max-w-5xl rounded-2xl bg-slate-700 p-2">
-              <div className="p-3 text-xs font-medium text-white/60">
+            <div className="relative mt-5 max-w-5xl rounded-2xl bg-slate-700 p-1.5">
+              <div className="mb-2 p-3 text-xs font-medium text-white/60">
                 script
               </div>
               <CopyButton textToCopy={scriptInline} />
@@ -99,8 +99,8 @@ export default async function Page() {
               You can use this URL to configure your Whatsapp Webhook on Meta
               Developers.
             </p>
-            <div className="relative mt-5 max-w-5xl rounded-2xl bg-slate-700 p-2">
-              <div className="p-3 text-xs font-medium text-white/60">
+            <div className="relative mt-5 max-w-5xl rounded-2xl bg-slate-700 p-1.5">
+              <div className="mb-2 p-3 text-xs font-medium text-white/60">
                 script
               </div>
               <CopyButton textToCopy={scriptWhatsappp} />

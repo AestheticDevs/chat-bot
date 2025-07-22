@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model agents {
+  id              Int            @id @default(autoincrement())
+  name            String         @db.VarChar(100)
+  description     String?        @db.Text
+  collection_name String         @unique(map: "collection_name") @db.VarChar(100)
+  system_prompt   String?        @db.Text
+  is_active       Boolean?
+  created_at      DateTime?      @default(now()) @db.DateTime(0)
+  updated_at      DateTime?      @default(now()) @db.DateTime(0)
+  owner_id        Int
+  iframe_title    String?        @db.VarChar(200)
+  iframe_width    String?        @db.VarChar(20)
+  iframe_height   String?        @db.VarChar(20)
+  iframe_theme    String?        @db.VarChar(20)
+  users           users          @relation(fields: [owner_id], references: [id], onUpdate: Restrict, map: "agents_ibfk_1")
+  data_sources    data_sources[]
+
+  @@index([id], map: "ix_agents_id")
+  @@index([owner_id], map: "owner_id")
+}
+
+model alembic_version {
+  version_num String @id @db.VarChar(32)
+}
+
+model data_sources {
+  id            Int       @id @default(autoincrement())
+  name          String    @db.VarChar(200)
+  source_type   String    @db.VarChar(20)
+  source_path   String?   @db.VarChar(500)
+  content       String?   @db.Text
+  file_type     String?   @db.VarChar(10)
+  status        String?   @db.VarChar(20)
+  chunk_count   Int?
+  error_message String?   @db.Text
+  created_at    DateTime? @default(now()) @db.DateTime(0)
+  updated_at    DateTime? @default(now()) @db.DateTime(0)
+  agent_id      Int
+  agents        agents    @relation(fields: [agent_id], references: [id], onUpdate: Restrict, map: "data_sources_ibfk_1")
+
+  @@index([agent_id], map: "agent_id")
+  @@index([id], map: "ix_data_sources_id")
+}
+
+model users {
+  id              Int        @id @default(autoincrement())
+  username        String     @unique(map: "ix_users_username") @db.VarChar(50)
+  email           String     @unique(map: "ix_users_email") @db.VarChar(100)
+  hashed_password String     @db.VarChar(255)
+  full_name       String     @db.VarChar(100)
+  role            users_role
+  is_active       Boolean?
+  created_at      DateTime?  @default(now()) @db.DateTime(0)
+  updated_at      DateTime?  @default(now()) @db.DateTime(0)
+  created_by      Int?
+  agents          agents[]
+  users           users?     @relation("usersTousers", fields: [created_by], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "users_ibfk_1")
+  other_users     users[]    @relation("usersTousers")
+
+  @@index([created_by], map: "created_by")
+  @@index([id], map: "ix_users_id")
+}
+
+enum users_role {
+  SUPER_ADMIN
+  ADMIN
+}

@@ -1,5 +1,6 @@
 import { SidebarComponent } from "@/components/admin/Sidebar";
-import { Header } from "@/components/admin/Header";
+import { Header } from "@/components/public/Header";
+import { Button } from "@/components/ui/button";
 // import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";
 
 const layout = ({
@@ -20,6 +21,8 @@ const layout = ({
           <main className="flex-1 overflow-y-auto px-8 py-4">{children}</main>
         </div>
       </div>
+
+      <Button className="absolute right-8 bottom-8">Need help?</Button>
     </>
   );
 };
