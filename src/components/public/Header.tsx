@@ -12,20 +12,47 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Avatar } from "@radix-ui/react-avatar";
+import { logoutAction } from "@/app/action/auth";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { useRouter } from "next/navigation";
+import { useLoadingStore } from "@/store/useLoadingStore";
+import Loader from "../Loader";
 
 export const Header = () => {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const { isLoading, setLoading } = useLoadingStore();
+
+  console.log(open);
+  const router = useRouter();
 
   useEffect(() => {
     const checkLogin = async () => {
       const res = await fetch("/api/me");
       const data = await res.json();
-      console.log(data);
       setLoggedIn(data.loggedIn);
     };
 
     checkLogin();
   }, []);
+
+  const handleLogout = async () => {
+    setLoading(true);
+    await logoutAction();
+    setOpen(false);
+    router.push("/login");
+    setLoading(false);
+  };
 
   return (
     <header className="sticky top-0 z-50 flex border backdrop-blur-xs dark:bg-gray-800">
@@ -36,24 +63,33 @@ export const Header = () => {
               href="/"
               className="text-2xl font-bold text-gray-900 dark:text-white"
             >
-              <img
-                src="/logo-ksps.png
-              "
-                alt=""
-              />
+              <img src="/logo-ksps.png" alt="" />
             </a>
           </div>
 
           {loggedIn ? (
             <DropdownMenu>
-              <DropdownMenuTrigger>Open</DropdownMenuTrigger>
-              <DropdownMenuContent>
+              <DropdownMenuTrigger className="outline-0">
+                <Avatar>
+                  <div className="h-10 w-10 cursor-pointer rounded-full ring-2 ring-white">
+                    <img
+                      src="https://avatar.iran.liara.run/public/39"
+                      alt="Avatar Image"
+                      className="size-10 rounded-full"
+                    />
+                  </div>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="mt-2 w-36">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
-                <DropdownMenuItem>Billing</DropdownMenuItem>
-                <DropdownMenuItem>Team</DropdownMenuItem>
-                <DropdownMenuItem>Subscription</DropdownMenuItem>
+
+                <DropdownMenuItem
+                  onClick={() => setOpen(true)}
+                  className="hover:bg-transparen4 w-full border-0 bg-transparent text-rose-500 shadow-none hover:text-rose-600"
+                >
+                  Logout
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
@@ -66,6 +102,29 @@ export const Header = () => {
           )}
         </div>
       </div>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild></DialogTrigger>
+        <DialogContent>
+          <DialogHeader className="text-center">
+            <DialogTitle>Logout?</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to log out?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              className="w-20 bg-rose-500 hover:bg-rose-600"
+              onClick={handleLogout}
+            >
+              {isLoading ? <Loader /> : <span>Log Out</span>}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </header>
   );
 };

@@ -1,4 +1,5 @@
 // src/app/layout.tsx
+import { RouteChangeReset } from "@/components/RouteChangeReset";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
@@ -20,8 +21,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={montserrat.variable}>
-        {children} suppressHydrationWarning
+      <body className={montserrat.variable} suppressHydrationWarning>
+        <RouteChangeReset />
+        {children}
       </body>
     </html>
   );

@@ -1,12 +1,12 @@
 import { SendIcon } from "lucide-react";
 
 export default async function Page(props: any) {
-  const id = props?.params?.id;
+  const { id } = await props.params; // pakai await di object destructuring
 
   return (
     // Wrapper
     <div className="w-full">
-      <div className="text-2xl font-bold">Preview</div>
+      <div className="text-2xl font-bold">Preview </div>
 
       <div className="mt-6 grid grid-cols-1">
         {/* Chatbox Preview */}

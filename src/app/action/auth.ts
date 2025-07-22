@@ -14,11 +14,15 @@ export async function loginAction(formData: FormData) {
 
   // Cari user
   const user = await prisma.users.findUnique({ where: { username } });
-  if (!user) return { error: "User not found" };
+  if (!user) {
+    return { error: "User not found" };
+  }
 
   // Validasi password
   const isValid = await bcrypt.compare(password, user.hashed_password);
-  if (!isValid) return { error: "Invalid credentials" };
+  if (!isValid) {
+    return { error: "Invalid credentials" };
+  }
 
   // Buat token
   const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, {
