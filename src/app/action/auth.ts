@@ -15,40 +15,36 @@ export async function loginAction(formData: FormData) {
     const password = formData.get("password") as string;
 
     console.log("DEBUG: Login attempt ->", username);
+    console.log("DEBUG: ENV ->", {
+      hasDatabaseURL: !!process.env.DATABASE_URL,
+      hasSecret: !!process.env.JWT_SECRET,
+    });
 
-    // Cari user
     const user = await prisma.users.findUnique({ where: { username } });
-    if (!user) {
-      console.log("DEBUG: User not found");
-      return { error: "User not found" };
-    }
+    console.log("DEBUG: Prisma query result ->", user);
 
-    // Cek password
+    if (!user) return { error: "User not found" };
+
     const isValid = await bcrypt.compare(password, user.hashed_password);
-    if (!isValid) {
-      console.log("DEBUG: Password invalid");
-      return { error: "Invalid credentials" };
-    }
+    if (!isValid) return { error: "Invalid credentials" };
 
-    // Buat JWT
     const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, {
       expiresIn: "1h",
     });
 
-    // Simpan token ke cookie
     const cookieStore = await cookies();
     cookieStore.set("token", token, {
       httpOnly: true,
-      maxAge: 60 * 60, // 1 jam
+      maxAge: 60 * 60,
       path: "/",
       secure: process.env.NODE_ENV === "production",
     });
 
-    console.log("DEBUG: Login success -> token saved");
+    console.log("DEBUG: Login success -> token set");
     return { success: true };
   } catch (err: any) {
-    console.error("DEBUG: loginAction crashed ->", err);
-    return { error: "Server error, check logs" };
+    console.error("DEBUG: loginAction crashed ->", err.message, err.stack);
+    return { error: `Server error -> ${err.message}` };
   }
 }
 
