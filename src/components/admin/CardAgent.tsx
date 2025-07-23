@@ -4,16 +4,17 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { dateFormatter } from "@/lib/utils";
 
 export interface CardProps {
   name: string;
-  company: string;
+  description: string;
+  createdOn?: string;
 }
-export const Card = ({ name, company }: CardProps) => {
+export const Card = ({ name, description, createdOn }: CardProps) => {
   return (
     <>
       {/* Card */}
@@ -31,24 +32,31 @@ export const Card = ({ name, company }: CardProps) => {
                 <EllipsisIcon />
               </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem>View</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Billing</DropdownMenuItem>
-              <DropdownMenuItem>Team</DropdownMenuItem>
-              <DropdownMenuItem>Subscription</DropdownMenuItem>
+              <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
 
         {/* Name */}
-        <div className="mt-8">
-          <h2 className="mb-1 text-2xl font-bold text-slate-700">{name}</h2>
-          <div className="text-sm tracking-wide text-slate-500 uppercase">
-            {company}
+        <form className="mt-8">
+          <h2 className="mb-1 text-xl font-bold text-slate-700 capitalize">
+            {name}
+          </h2>
+          <p className="mb-4 line-clamp-1 text-sm text-slate-500 capitalize">
+            {description}
+          </p>
+
+          <div className="text-sm text-gray-500">
+            Created on :{" "}
+            <span className="opacity-65">
+              {dateFormatter(createdOn || new Date().toISOString())}
+            </span>
           </div>
-        </div>
+        </form>
       </div>
     </>
   );

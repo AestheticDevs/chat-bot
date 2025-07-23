@@ -12,7 +12,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar } from "@radix-ui/react-avatar";
 import { logoutAction } from "@/app/action/auth";
 import {
   Dialog,
@@ -26,6 +25,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useLoadingStore } from "@/store/useLoadingStore";
 import Loader from "../Loader";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const Header = () => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -71,14 +71,19 @@ export const Header = () => {
             <DropdownMenu>
               <DropdownMenuTrigger className="outline-0">
                 <Avatar>
-                  <div className="h-10 w-10 cursor-pointer rounded-full ring-2 ring-white">
-                    <img
-                      src="https://avatar.iran.liara.run/public/39"
-                      alt="Avatar Image"
-                      className="size-10 rounded-full"
-                    />
-                  </div>
+                  <AvatarImage
+                    src="https://avatar.iran.liara.run/public/39"
+                    className="rounded-full"
+                  />
+                  <AvatarFallback>
+                    <img srcSet="/placeholder-ava.png" alt="" />
+                  </AvatarFallback>
                 </Avatar>
+                {/* <Avatar>
+                  <div className="h-10 w-10 cursor-pointer rounded-full ring-2 ring-white">
+                    <img alt="Avatar Image" />
+                  </div>
+                </Avatar> */}
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="mt-2 w-36">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -104,7 +109,6 @@ export const Header = () => {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild></DialogTrigger>
         <DialogContent>
           <DialogHeader className="text-center">
             <DialogTitle>Logout?</DialogTitle>
