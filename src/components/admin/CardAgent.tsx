@@ -8,13 +8,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { dateFormatter } from "@/lib/utils";
+import Link from "next/link";
 
 export interface CardProps {
+  id: number;
   name: string;
   description: string;
   createdOn?: string;
+  onDelete?: () => void;
 }
-export const Card = ({ name, description, createdOn }: CardProps) => {
+export const CardAgent = ({
+  id,
+  name,
+  description,
+  createdOn,
+  onDelete,
+}: CardProps) => {
   return (
     <>
       {/* Card */}
@@ -34,29 +43,41 @@ export const Card = ({ name, description, createdOn }: CardProps) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem>Edit</DropdownMenuItem>
-              <DropdownMenuItem>View</DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href={`/admin/${id}/preview`} className="block w-full">
+                  View
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+              <DropdownMenuItem
+                variant="destructive"
+                onSelect={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation(); // stop klik dari bubble ke Link
+                  if (onDelete) onDelete();
+                }}
+              >
+                Delete
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
 
-        {/* Name */}
-        <form className="mt-8">
-          <h2 className="mb-1 text-xl font-bold text-slate-700 capitalize">
+        {/* Wrap Link hanya pada konten utama, bukan seluruh card */}
+        <Link href={`/admin/${id}/preview`} className="mt-8 block">
+          <h2 className="hover:text-primary-brand mb-1 text-xl font-bold text-slate-700 capitalize">
             {name}
           </h2>
           <p className="mb-4 line-clamp-1 text-sm text-slate-500 capitalize">
             {description}
           </p>
-
           <div className="text-sm text-gray-500">
-            Created on :{" "}
+            Created on:{" "}
             <span className="opacity-65">
               {dateFormatter(createdOn || new Date().toISOString())}
             </span>
           </div>
-        </form>
+        </Link>
       </div>
     </>
   );

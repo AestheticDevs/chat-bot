@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { Card } from "./CardAgent";
-
+import { CardAgent as Card } from "./CardAgent";
 interface Agent {
   id: number;
   name: string;
@@ -25,20 +24,38 @@ export const AgentList = () => {
     }
   };
 
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await fetch(`/api/agents/${id}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        setAgents(agents.filter((agent) => agent.id !== id));
+        window.location.reload();
+      } else {
+        console.error("Failed to delete agent");
+      }
+    } catch (error) {
+      console.error("Error deleting agent:", error);
+    }
+  };
+
   useEffect(() => {
     fetchAgent();
   }, []);
   return (
-    <div className="mt-6 grid grid-cols-4 gap-8">
+    <div className="mt-6 grid grid-cols-4 gap-6">
       {agents?.map((item, index) => (
-        <Link key={index} href={`/admin/${item.id}/preview`}>
+        <div key={index}>
           <Card
             key={index}
+            id={item.id}
             name={item.name}
             description={item.description}
             createdOn={item.created_at}
+            onDelete={() => handleDelete(item.id)}
           />
-        </Link>
+        </div>
       ))}
     </div>
   );
