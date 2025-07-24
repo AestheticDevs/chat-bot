@@ -5,16 +5,16 @@ export default function Home() {
     <section className="max-h-80vh relative place-items-center">
       <div className="container py-6 text-center">
         <h3 className="text-[42px] leading-[1.2] font-bold text-slate-800">
-          Your{" "}
+          Asisten AI{" "}
           <span className="from-secondary-brand to-accent-brand inline-block bg-gradient-to-br bg-clip-text text-transparent">
-            Smartest
+            Tercerdas
           </span>{" "}
-          AI Assistant <br /> Is Here
+          <br /> Siap Membantu Kebutuhan Anda
         </h3>
-        <p className="m-auto mt-3 w-3/4 text-slate-600">
-          Whether you're streamlining support, automating tasks, or just need
-          fast answers—our AI is ready <br /> 24/7 to lighten your load and
-          boost your workflow.
+        <p className="m-auto mt-3 w-2/3 text-slate-600">
+          Dapatkan jawaban cepat dan akurat kapan saja. Chatbot AI kami siap
+          membantu menjawab pertanyaan, memberikan informasi, dan meningkatkan
+          efisiensi layanan Anda secara profesional.
         </p>
         <Image
           alt=""
@@ -22,7 +22,7 @@ export default function Home() {
           className="absolute top-0 left-0 -z-10 w-full"
           fill
           unoptimized
-        ></Image>
+        />
         <Image
           alt=""
           src={"/hero-img.png"}
@@ -30,7 +30,7 @@ export default function Home() {
           width={400}
           height={400}
           unoptimized
-        ></Image>{" "}
+        />
       </div>
     </section>
   );
