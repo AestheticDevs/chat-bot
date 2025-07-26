@@ -1,47 +1,21 @@
-import { Button } from "@/components/ui/button";
+import AgentForm from "./AgentForm";
+import { AgentList } from "./AgentList";
+import { API_URL } from "@/lib/shared";
+import { type ListCollectionResult } from "@/types/agent.types";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import AgentForm from "@/components/admin/AgentForm";
-import { AgentList } from "@/components/admin/AgentList";
-
-const page = () => {
+const page = async () => {
+  const res = await fetch(`${API_URL}/collections`);
+  const data = (await res.json()) as ListCollectionResult;
   return (
     // Wrapper
     <div className="w-full">
       <div className="flex items-center justify-between">
         <div className="text-2xl font-bold">Set up your Chat Bot</div>
         <div className="float-right">
-          <Dialog>
-            <DialogTrigger>
-              {" "}
-              <Button asChild>
-                <div className="bg-primary-brand text-primary-foreground hover:bg-primary-brand/90 shadow-xs">
-                  Add agent +
-                </div>
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Add new agent</DialogTitle>
-                <DialogDescription>
-                  Fill in the details to create a new agent for your chat bot.
-                </DialogDescription>
-                {/* Form for adding new agent can be added here */}
-                <AgentForm />
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
+          <AgentForm />
         </div>
       </div>
-
-      <AgentList />
+      <AgentList collections={data.result.collections} />
     </div>
   );
 };

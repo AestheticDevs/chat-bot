@@ -3,6 +3,7 @@ import { RouteChangeReset } from "@/components/RouteChangeReset";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
+import ProgressProvider from "@/components/progress-provider";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -23,7 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={montserrat.variable} suppressHydrationWarning>
         <RouteChangeReset />
-        {children}
+        <ProgressProvider>{children}</ProgressProvider>
       </body>
     </html>
   );

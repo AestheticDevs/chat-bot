@@ -18,7 +18,7 @@ const layout = ({
           <SidebarComponent />
 
           {/* Page Content */}
-          <main className="flex-1 overflow-y-auto px-8 py-4">{children}</main>
+          <main className="flex-1 px-8 py-4 flex flex-col grow overflow-y-auto">{children}</main>
         </div>
       </div>
 
