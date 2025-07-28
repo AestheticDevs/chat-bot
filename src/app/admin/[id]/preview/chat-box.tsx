@@ -1,6 +1,12 @@
 "use client";
 
-import { CheckCheck, Copy, Loader2Icon, SendIcon } from "lucide-react";
+import {
+  CheckCheck,
+  Copy,
+  Loader2Icon,
+  SendIcon,
+  TriangleAlert,
+} from "lucide-react";
 import {
   startTransition,
   useEffect,
@@ -10,12 +16,14 @@ import {
 } from "react";
 import chatWithCollection from "./action";
 import { Button } from "@/components/ui/button";
+import { LOCAL_ENV } from "@/lib/shared";
 
 export interface ChatType {
   question: string;
   answer: {
     text: string;
     isLoading: boolean;
+    isError?: boolean;
   };
 }
 
@@ -49,7 +57,7 @@ export default function ChatBox({ collection_id }: { collection_id: string }) {
       {/* Footer */}
       <div className="bg-slate-300 p-5 py-4 text-center">
         <div className="text-sm font-semibold text-slate-500">
-          Powered by <span className="text-primary-brand">Chatbot</span>
+          Powered by <span className="text-primary-brand">KSPSTK</span>
         </div>
       </div>
     </div>
@@ -73,6 +81,7 @@ function Conversation({
       answer: {
         isLoading: true,
         text: "",
+        isError: false,
       },
     },
   ]);
@@ -105,6 +114,7 @@ function Conversation({
               <AnswerBuble
                 isLoading={item.answer.isLoading}
                 text={item.answer.text}
+                isError={item.answer.isError}
               />
             </div>
           );
@@ -138,12 +148,23 @@ function QuestionBubble({ text }: { text: string }) {
   );
 }
 
-function AnswerBuble({ isLoading, text }: ChatType["answer"]) {
+function AnswerBuble({ isLoading, text, isError }: ChatType["answer"]) {
   const [copied, setCopied] = useState(false);
   function copyToClipboard() {
     setCopied(true);
     navigator.clipboard.writeText(text);
   }
+
+  if (isError) {
+    return (
+      <p className="text-destructive">
+        <TriangleAlert strokeWidth={1.5} className="mb-2" /> Something went
+        wrong!
+        {LOCAL_ENV ? <small className="block">{text}</small> : null}
+      </p>
+    );
+  }
+
   return (
     <div className="py-4">
       {isLoading ? (
