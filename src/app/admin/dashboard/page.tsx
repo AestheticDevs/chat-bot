@@ -3,6 +3,8 @@ import { AgentList } from "./AgentList";
 import { API_URL } from "@/lib/shared";
 import { type ListCollectionResult } from "@/types/agent.types";
 
+export const dynamic = "force-dynamic";
+
 const page = async () => {
   const res = await fetch(`${API_URL}/collections`);
   const data = (await res.json()) as ListCollectionResult;
