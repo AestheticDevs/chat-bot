@@ -95,7 +95,7 @@ const DocumentFormUpload = () => {
   };
 
   function handleUpload() {
-    startTransition(action);
+    // startTransition(action);
   }
 
   return (
