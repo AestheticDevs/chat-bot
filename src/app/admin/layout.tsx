@@ -9,21 +9,22 @@ const layout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <>
+    <main className="flex h-screen flex-col">
       <Header />
-      <div className="flex h-full flex-col overflow-hidden bg-slate-100 p-6">
+      <div className="flex grow flex-col overflow-y-scroll bg-slate-100 p-6">
         {/* Main Area */}
         <div className="mx-auto flex h-full w-full flex-1">
           {/* Sidebar */}
           <SidebarComponent />
 
           {/* Page Content */}
-          <main className="flex-1 px-8 py-4 flex flex-col grow overflow-y-auto">{children}</main>
+          <main className="flex flex-1 flex-col overflow-y-auto px-8 py-4">
+            {children}
+          </main>
         </div>
       </div>
-
       <Button className="absolute right-8 bottom-8">Need help?</Button>
-    </>
+    </main>
   );
 };
 

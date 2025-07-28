@@ -27,7 +27,7 @@ export default async function Page(props: any) {
           {/* Footer */}
           <div className="bg-slate-300 p-5 py-4 text-center">
             <div className="text-sm font-semibold text-slate-500">
-              Powered by <span className="text-primary-brand">Chatbot</span>
+              Powered by <span className="text-primary-brand">KSPSTK</span>
             </div>
           </div>
         </div>

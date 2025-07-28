@@ -4,6 +4,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import ProgressProvider from "@/components/progress-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -25,6 +26,7 @@ export default function RootLayout({
       <body className={montserrat.variable} suppressHydrationWarning>
         <RouteChangeReset />
         <ProgressProvider>{children}</ProgressProvider>
+        <Toaster />
       </body>
     </html>
   );

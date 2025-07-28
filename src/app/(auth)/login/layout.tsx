@@ -18,7 +18,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
         <small className="tracking-wide text-gray-500">
           Powered by{" "}
           <a href="" className="text-primary-brand font-medium">
-            ChatBot.
+            KSPSTK.
           </a>
         </small>
       </div>{" "}

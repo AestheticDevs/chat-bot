@@ -43,7 +43,9 @@ export default async function Page({ params }: { params: { id: string } }) {
                       {i + 1}
                     </TableCell>
                     <TableCell>{document.filename}</TableCell>
-                    <TableCell className="text-center">{document.file_type}</TableCell>
+                    <TableCell className="text-center">
+                      {document.file_type}
+                    </TableCell>
                     <TableCell className="text-center">
                       <Badge className="bg-teal-500">Trained</Badge>
                     </TableCell>

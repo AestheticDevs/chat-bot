@@ -20,6 +20,13 @@ export default async function chatWithCollection(
   );
 
   const data = await res.json();
-  console.log(data);
+
+  if (!res.ok) {
+    return {
+      question,
+      answer: { text: JSON.stringify(data), isLoading: false, isError: true },
+    };
+  }
+
   return { question, answer: { text: data.answer, isLoading: false } };
 }

@@ -9,9 +9,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { dateFormatter } from "@/lib/utils";
 import Link from "next/link";
 import { deleteCollection } from "@/app/action/delete-collection.action";
+import { toast } from "sonner";
 
 export interface CardProps {
   id_collection: string;
@@ -22,7 +22,11 @@ export interface CardProps {
 }
 export const CardAgent = ({ id_collection, name, status }: CardProps) => {
   const handleDelete = async (id: string) => {
-    await deleteCollection(id);
+    const promise = deleteCollection(id);
+    toast.promise(promise, {
+      loading: "Menghapus collection",
+      success: "Berhasil menghapus collection",
+    });
   };
 
   return (
@@ -55,9 +59,7 @@ export const CardAgent = ({ id_collection, name, status }: CardProps) => {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 variant="destructive"
-                onSelect={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation(); // stop klik dari bubble ke Link
+                onSelect={() => {
                   handleDelete(id_collection);
                 }}
               >
