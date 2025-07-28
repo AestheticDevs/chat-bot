@@ -14,7 +14,7 @@ import { Fragment } from "react";
 
 export const dynamic = "force-dynamic";
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({ params }: { params: any }) {
   const res = await fetch(`${API_URL}/documents/${params.id}`);
   const data = (await res.json()) as ListDocumentInCollectionResult;
   return (
@@ -43,7 +43,9 @@ export default async function Page({ params }: { params: { id: string } }) {
                       {i + 1}
                     </TableCell>
                     <TableCell>{document.filename}</TableCell>
-                    <TableCell className="text-center">{document.file_type}</TableCell>
+                    <TableCell className="text-center">
+                      {document.file_type}
+                    </TableCell>
                     <TableCell className="text-center">
                       <Badge className="bg-teal-500">Trained</Badge>
                     </TableCell>

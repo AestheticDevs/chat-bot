@@ -12,7 +12,7 @@ function getTokenFromCookies(cookieHeader: string | null) {
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: any },
 ) {
   try {
     const token = getTokenFromCookies(req.headers.get("cookie"));
