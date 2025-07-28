@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function Home() {
   return (
     <section className="max-h-80vh relative place-items-center">
-      <div className="container py-6 text-center">
+      <div className="container py-6 text-center mx-auto">
         <h3 className="text-[42px] leading-[1.2] font-bold text-slate-800">
           Asisten AI{" "}
           <span className="from-secondary-brand to-accent-brand inline-block bg-gradient-to-br bg-clip-text text-transparent">

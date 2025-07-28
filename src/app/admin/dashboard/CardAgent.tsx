@@ -1,3 +1,5 @@
+"use client";
+
 import { EllipsisIcon, LucideBot } from "lucide-react";
 
 import {
@@ -9,21 +11,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { dateFormatter } from "@/lib/utils";
 import Link from "next/link";
+import { deleteCollection } from "@/app/action/delete-collection.action";
 
 export interface CardProps {
-  id: number;
+  id_collection: string;
   name: string;
-  description: string;
-  createdOn?: string;
-  onDelete?: () => void;
+  status: string;
+  // createdOn?: string;
+  // onDelete?: () => void;
 }
-export const CardAgent = ({
-  id,
-  name,
-  description,
-  createdOn,
-  onDelete,
-}: CardProps) => {
+export const CardAgent = ({ id_collection, name, status }: CardProps) => {
+  const handleDelete = async (id: string) => {
+    await deleteCollection(id);
+  };
+
   return (
     <>
       {/* Card */}
@@ -42,9 +43,12 @@ export const CardAgent = ({
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>Edit</DropdownMenuItem>
+              {/* <DropdownMenuItem>Edit</DropdownMenuItem> */}
               <DropdownMenuItem>
-                <Link href={`/admin/${id}/preview`} className="block w-full">
+                <Link
+                  href={`/admin/${id_collection}/preview`}
+                  className="block w-full"
+                >
                   View
                 </Link>
               </DropdownMenuItem>
@@ -54,7 +58,7 @@ export const CardAgent = ({
                 onSelect={(e) => {
                   e.preventDefault();
                   e.stopPropagation(); // stop klik dari bubble ke Link
-                  if (onDelete) onDelete();
+                  handleDelete(id_collection);
                 }}
               >
                 Delete
@@ -64,18 +68,22 @@ export const CardAgent = ({
         </div>
 
         {/* Wrap Link hanya pada konten utama, bukan seluruh card */}
-        <Link href={`/admin/${id}/preview`} className="mt-8 block">
+        <Link href={`/admin/${id_collection}/preview`} className="mt-8 block">
           <h2 className="hover:text-primary-brand mb-1 text-xl font-bold text-slate-700 capitalize">
             {name}
           </h2>
-          <p className="mb-4 line-clamp-1 text-sm text-slate-500 capitalize">
+          {/* <p className="mb-4 line-clamp-1 text-sm text-slate-500 capitalize">
             {description}
-          </p>
-          <div className="text-sm text-gray-500">
+          </p> */}
+          {/* <div className="text-sm text-gray-500">
             Created on:{" "}
             <span className="opacity-65">
               {dateFormatter(createdOn || new Date().toISOString())}
             </span>
+          </div> */}
+          <div className="text-xs text-gray-500">
+            <span>Agent ID: </span>
+            <span className="opacity-65">{id_collection}</span>
           </div>
         </Link>
       </div>

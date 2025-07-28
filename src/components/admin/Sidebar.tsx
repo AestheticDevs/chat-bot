@@ -26,6 +26,7 @@ import {
 
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 export const SidebarComponent = () => {
   // const id = params;
@@ -129,7 +130,7 @@ export const SidebarComponent = () => {
             <ul className="mt-4 space-y-2">
               {/* Always show dashboard */}
               <li key={dashboardItem.title}>
-                <a
+                <Link
                   href={dashboardItem.url}
                   className={`${
                     dashboardItem.match(onPath)
@@ -141,7 +142,7 @@ export const SidebarComponent = () => {
                   <span className={`truncate text-sm`}>
                     {dashboardItem.title}
                   </span>
-                </a>
+                </Link>
               </li>
 
               {/* Only show agent-related menus when in /admin/${currentId}/... */}
