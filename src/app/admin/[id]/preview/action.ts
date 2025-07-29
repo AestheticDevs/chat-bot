@@ -7,14 +7,16 @@ export default async function chatWithCollection(
   collectionId: string,
 ) {
   const res = await fetch(
-    `${API_URL}/ask?vector_store_type=qdrant&id_collection=${collectionId}`,
+    `${API_URL}/chat?vector_store_type=qdrant&id_collection=${collectionId}`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        question: question,
+        message: question,
+        id_collection: collectionId,
+        vector_store: "qdrant",
       }),
     },
   );

@@ -21,7 +21,7 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
             KSPSTK.
           </a>
         </small>
-      </div>{" "}
+      </div>
     </>
   );
 }

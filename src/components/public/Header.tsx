@@ -89,6 +89,11 @@ export const Header = () => {
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
 
+                <DropdownMenuItem>
+                  <Link href="/admin/dashboard" className="w-full">
+                    Dashboard
+                  </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => setOpen(true)}
                   className="hover:bg-transparen4 w-full border-0 bg-transparent text-rose-500 shadow-none hover:text-rose-600"

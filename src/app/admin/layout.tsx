@@ -11,7 +11,7 @@ const layout = ({
   return (
     <main className="flex h-screen flex-col">
       <Header />
-      <div className="flex grow flex-col overflow-y-scroll bg-slate-100 p-6">
+      <div className="flex grow flex-col overflow-y-auto bg-slate-100 p-6">
         {/* Main Area */}
         <div className="mx-auto flex h-full w-full flex-1">
           {/* Sidebar */}

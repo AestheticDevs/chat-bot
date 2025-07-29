@@ -101,7 +101,7 @@ export const SidebarComponent = () => {
   return (
     <aside
       className={cn(
-        "w-[200px] rounded-full bg-white p-4 shadow-2xl shadow-slate-500/30",
+        "w-[200px] rounded-full bg-white p-4 shadow-2xl shadow-slate-500/30 overflow-y-auto",
       )}
     >
       <div className="text-center">

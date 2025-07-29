@@ -4,7 +4,9 @@ import { jwtVerify } from "jose";
 
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
 
-function getTokenFromCookies(cookieHeader: string | null) {
+function getTokenFromCookies(
+  cookieHeader: string | null,
+): string | null {
   if (!cookieHeader) return null;
   const match = cookieHeader.match(/(?:^|;\s*)token=([^;]+)/);
   return match ? match[1] : null;
