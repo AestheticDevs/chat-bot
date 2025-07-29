@@ -4,6 +4,7 @@ import {
   CheckCheck,
   Copy,
   Loader2Icon,
+  SendHorizonal,
   SendIcon,
   TriangleAlert,
 } from "lucide-react";
@@ -17,11 +18,13 @@ import {
 import chatWithCollection from "./action";
 import { Button } from "@/components/ui/button";
 import { LOCAL_ENV } from "@/lib/shared";
+import { markdownToHtml } from "@/lib/utils";
 
 export interface ChatType {
   question: string;
   answer: {
     text: string;
+    html?: string;
     isLoading: boolean;
     isError?: boolean;
   };
@@ -40,14 +43,14 @@ export default function ChatBox({ collection_id }: { collection_id: string }) {
     });
   }
   return (
-    <div className="flex grow flex-col overflow-hidden overflow-y-hidden rounded-3xl bg-white shadow-xl shadow-slate-200/50">
+    <div className="flex h-full w-full grow flex-col overflow-hidden overflow-y-hidden rounded-3xl border-2 border-white shadow-xl shadow-slate-200/50">
       {/* Header */}
-      <div className="bg-primary-brand flex p-5">
-        <div className="text-xl font-semibold text-white">Agent Geen</div>
+      <div className="flex p-5">
+        <div className="text-xl font-semibold text-indigo-900">Chatbot</div>
       </div>
 
       {/* Text Box */}
-      <div className="relative flex grow flex-col gap-4 overflow-y-auto bg-neutral-50">
+      <div className="relative flex grow flex-col gap-4 overflow-y-auto bg-slate-50">
         <Conversation
           conversation={conversation}
           sendQuestionAction={sendQuestionAction}
@@ -55,7 +58,7 @@ export default function ChatBox({ collection_id }: { collection_id: string }) {
       </div>
 
       {/* Footer */}
-      <div className="bg-slate-300 p-5 py-4 text-center">
+      <div className="bg-slate-100 p-5 py-4 text-center">
         <div className="text-sm font-semibold text-slate-500">
           Powered by <span className="text-primary-brand">KSPSTK</span>
         </div>
@@ -107,6 +110,9 @@ function Conversation({
     <>
       {/* Message Container */}
       <div className="flex flex-1 grow flex-col overflow-y-auto p-8">
+        <small className="text-center text-slate-500">
+          {new Date().toLocaleDateString()}
+        </small>
         {conversationOptimistic.map((item, i) => {
           return (
             <div key={i} className="flex flex-col gap-4">
@@ -114,6 +120,7 @@ function Conversation({
               <AnswerBuble
                 isLoading={item.answer.isLoading}
                 text={item.answer.text}
+                html={item.answer.html}
                 isError={item.answer.isError}
               />
             </div>
@@ -123,17 +130,17 @@ function Conversation({
       </div>
 
       <form action={formAction} ref={formRef} className="p-8 pt-2">
-        <div className="flex items-center rounded-md border pe-4">
+        <div className="relative">
           <input
             type="text"
-            className="w-full p-4 outline-0"
-            placeholder="Text me"
+            className="w-full p-4 outline-0 border rounded-lg"
+            placeholder="Ketik pertanyaan anda..."
             name="question"
             required
           />
-          <button>
-            <SendIcon className="cursor-pointer text-slate-400 hover:text-slate-600" />
-          </button>
+          <Button variant={"default"} className="rounded-lg px-4 absolute right-3 top-1/2 -translate-y-1/2">
+            <SendHorizonal className="cursor-pointer text-white" />
+          </Button>
         </div>
       </form>
     </>
@@ -142,13 +149,13 @@ function Conversation({
 
 function QuestionBubble({ text }: { text: string }) {
   return (
-    <div className="mb-2 ml-auto block w-fit max-w-3/4 rounded-2xl rounded-tr-none bg-slate-200 p-3 text-end">
+    <div className="prose mb-2 ml-auto block w-fit max-w-3/4 rounded-2xl rounded-tr-none bg-slate-100 p-3 px-4 text-end">
       {text}
     </div>
   );
 }
 
-function AnswerBuble({ isLoading, text, isError }: ChatType["answer"]) {
+function AnswerBuble({ isLoading, text, html, isError }: ChatType["answer"]) {
   const [copied, setCopied] = useState(false);
   function copyToClipboard() {
     setCopied(true);
@@ -160,7 +167,12 @@ function AnswerBuble({ isLoading, text, isError }: ChatType["answer"]) {
       <p className="text-destructive">
         <TriangleAlert strokeWidth={1.5} className="mb-2" /> Something went
         wrong!
-        {LOCAL_ENV ? <small className="block">{text}</small> : null}
+        {LOCAL_ENV ? (
+          <small
+            className="block"
+            dangerouslySetInnerHTML={{ __html: text }}
+          ></small>
+        ) : null}
       </p>
     );
   }
@@ -174,7 +186,10 @@ function AnswerBuble({ isLoading, text, isError }: ChatType["answer"]) {
         </p>
       ) : (
         <div>
-          <p className="mb-3">{text}</p>
+          <div
+            className="prose mb-3"
+            dangerouslySetInnerHTML={{ __html: html as string }}
+          ></div>
           <Button variant={"outline"} size={"sm"} onClick={copyToClipboard}>
             {copied ? <CheckCheck size={16} /> : <Copy size={16} />}
             Copy

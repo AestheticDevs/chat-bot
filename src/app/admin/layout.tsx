@@ -1,5 +1,5 @@
 import { SidebarComponent } from "@/components/admin/Sidebar";
-import { Header } from "@/components/public/Header";
+import { Header } from "@/components/admin/Header";
 import { Button } from "@/components/ui/button";
 // import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";
 
@@ -18,12 +18,12 @@ const layout = ({
           <SidebarComponent />
 
           {/* Page Content */}
-          <main className="flex flex-1 flex-col overflow-y-auto px-8 py-4">
+          <main className="flex flex-1 flex-col overflow-y-auto ml-8">
             {children}
           </main>
         </div>
       </div>
-      <Button className="absolute right-8 bottom-8">Need help?</Button>
+      {/* <Button className="absolute right-8 bottom-8">Need help?</Button> */}
     </main>
   );
 };

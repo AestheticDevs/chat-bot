@@ -55,8 +55,8 @@ export const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 flex border backdrop-blur-xs dark:bg-gray-800">
-      <div className="w-full px-4 py-4">
+    <header className="sticky top-0 z-50 flex backdrop-blur-xs dark:bg-gray-800">
+      <div className="w-full px-4 py-4 container mx-auto">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <a

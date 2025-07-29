@@ -10,8 +10,8 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
         >
           <img src="/logo-ksps.png" alt="" />
         </a>
-      </div>{" "}
-      <main className="grid h-screen w-screen place-items-center">
+      </div>
+      <main className="grid h-screen w-full place-items-center">
         {children}
       </main>
       <div className="absolute right-0 bottom-0 left-0 mx-auto mb-3 flex items-center justify-center">

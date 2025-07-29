@@ -15,6 +15,7 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar";
 import {
+  Bot,
   Database,
   Edit,
   Eye,
@@ -67,6 +68,7 @@ export const SidebarComponent = () => {
       icon: Settings,
       match: (path: string) =>
         path.includes("/admin/") && path.endsWith("/settings"),
+      disable: true,
     },
     {
       title: "Customize",
@@ -74,6 +76,7 @@ export const SidebarComponent = () => {
       icon: Edit,
       match: (path: string) =>
         path.includes("/admin/") && path.endsWith("/customize"),
+      disable: true,
     },
     {
       title: "Data Source",
@@ -88,6 +91,7 @@ export const SidebarComponent = () => {
       icon: Mail,
       match: (path: string) =>
         path.includes("/admin/") && path.endsWith("/inbox"),
+      disable: true,
     },
     {
       title: "Embed",
@@ -101,72 +105,70 @@ export const SidebarComponent = () => {
   return (
     <aside
       className={cn(
-        "w-[200px] rounded-full bg-white p-4 shadow-2xl shadow-slate-500/30 overflow-y-auto",
+        "h-full w-[200px] rounded-full border-2 border-white bg-slate-100 bg-gradient-to-br from-white/70 to-white/40 p-5 shadow-xl shadow-slate-200 duration-150 ease-in hover:bg-white",
       )}
     >
-      <div className="text-center">
-        <div className="p-4">
-          <Avatar className="aspect-square h-16 w-16">
-            <AvatarImage
-              src="https://github.com/shadcn.png"
-              className="rounded-full"
-            />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+      <div className="flex max-h-full flex-col">
+        <div className="mx-auto grid aspect-square w-full place-items-center rounded-full border border-indigo-100 bg-indigo-50 p-4">
+          <Bot className="size-16 text-indigo-900" strokeWidth={1.5} />
         </div>
 
         {/* Name */}
-        <div className="mt-3 text-lg font-semibold text-nowrap text-slate-800">
+        {/* <div className="mt-3 text-lg font-semibold text-nowrap text-slate-800">
           Agent {agent.name}
         </div>
         <span className="text-xs text-slate-400 uppercase">
           {agent.company}
-        </span>
+        </span> */}
         {/* Name */}
 
         {/* Menu */}
-        <SidebarProvider>
-          <nav className="w-full">
-            <ul className="mt-4 space-y-2">
-              {/* Always show dashboard */}
-              <li key={dashboardItem.title}>
-                <Link
-                  href={dashboardItem.url}
-                  className={`${
-                    dashboardItem.match(onPath)
-                      ? "text-primary-brand ps-3 font-semibold"
-                      : "text-slate-600"
-                  } group flex w-full items-center rounded-lg p-2 text-left text-sm font-medium hover:bg-slate-100 hover:text-slate-900`}
-                >
-                  <dashboardItem.icon className="group-hover:fill-primary-brand/20 mr-2 h-5 w-5 flex-none" />
-                  <span className={`truncate text-sm`}>
-                    {dashboardItem.title}
-                  </span>
-                </Link>
-              </li>
+        {/* <SidebarProvider> */}
+        <nav className="max-h-full w-full overflow-y-auto">
+          <ul className="mt-4 space-y-2">
+            {/* Always show dashboard */}
+            <li key={dashboardItem.title}>
+              <Link
+                href={dashboardItem.url}
+                className={`${
+                  dashboardItem.match(onPath)
+                    ? "text-primary-brand ps-3 font-semibold"
+                    : "text-slate-600"
+                } group flex w-full items-center rounded-lg p-2 text-left text-sm font-medium hover:bg-slate-100 hover:text-slate-900`}
+              >
+                <dashboardItem.icon className="group-hover:fill-primary-brand/20 mr-2 h-5 w-5 flex-none" />
+                <span className={`truncate text-sm`}>
+                  {dashboardItem.title}
+                </span>
+              </Link>
+            </li>
 
-              {/* Only show agent-related menus when in /admin/${currentId}/... */}
-              {isInAgentSection &&
-                agentMenus.map((item) => (
-                  <li key={item.title}>
-                    <a
-                      href={item.url}
-                      className={`${
-                        item.match?.(onPath)
-                          ? "text-primary-brand ps-3 font-semibold"
-                          : "text-slate-600"
-                      } group flex w-full items-center rounded-lg p-2 text-left text-sm font-medium duration-150 ease-in hover:bg-slate-100 hover:ps-3 hover:text-slate-900`}
-                    >
-                      <item.icon className="group-hover:fill-primary-brand/20 mr-2 h-5 w-5 flex-none" />
-                      <span className={`truncate text-sm`}>{item.title}</span>
-                    </a>
-                  </li>
-                ))}
-            </ul>
-          </nav>
-        </SidebarProvider>
+            {/* Only show agent-related menus when in /admin/${currentId}/... */}
+            {isInAgentSection &&
+              agentMenus.map((item) => (
+                <li key={item.title}>
+                  <Link
+                    href={item.url}
+                    className={cn(
+                      item.match?.(onPath)
+                        ? "text-primary-brand ps-3 font-semibold"
+                        : "text-slate-600",
+                      item.disable
+                        ? "pointer-events-none cursor-not-allowed opacity-50"
+                        : "",
+                      "group flex w-full items-center rounded-lg p-2 text-left text-sm font-medium duration-150 ease-in hover:bg-slate-100 hover:ps-3 hover:text-slate-900",
+                    )}
+                  >
+                    <item.icon className="group-hover:fill-primary-brand/20 mr-2 h-5 w-5 flex-none" />
+                    <span className={`truncate text-sm`}>{item.title}</span>
+                  </Link>
+                </li>
+              ))}
+          </ul>
+        </nav>
+        {/* </SidebarProvider> */}
         {/* Menu */}
-      </div>{" "}
+      </div>
     </aside>
   );
 };
