@@ -10,19 +10,26 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
-import { deleteCollection } from "@/app/action/delete-collection.action";
 import { toast } from "sonner";
+import { deleteAgentAction } from "./action/delete-agent-action";
 
 export interface CardProps {
   id_collection: string;
   name: string;
   status: string;
+  description?: string;
+  id: number;
   // createdOn?: string;
   // onDelete?: () => void;
 }
-export const CardAgent = ({ id_collection, name, status }: CardProps) => {
-  const handleDelete = async (id: string) => {
-    const promise = deleteCollection(id);
+export const CardAgent = ({
+  id_collection,
+  name,
+  id,
+  description,
+}: CardProps) => {
+  const handleDelete = async (id_collection: string, id: number) => {
+    const promise = deleteAgentAction(id_collection, id);
     toast.promise(promise, {
       loading: "Menghapus collection",
       success: "Berhasil menghapus collection",
@@ -30,9 +37,11 @@ export const CardAgent = ({ id_collection, name, status }: CardProps) => {
   };
 
   return (
-    <>
-      {/* Card */}
-      <div className="hover:border-primary-brand group cursor-pointer rounded-2xl border-2 border-white bg-slate-100 bg-gradient-to-br from-white/70 to-white/40 p-5 shadow-lg shadow-slate-200 duration-150 ease-in hover:bg-white">
+    <Link
+      href={`/admin/${id_collection}/preview`}
+      className="mt-8 block h-full cursor-pointer"
+    >
+      <div className="hover:border-primary-brand group flex h-full cursor-pointer flex-col justify-between rounded-2xl border-2 border-white bg-slate-100 bg-gradient-to-br from-white/70 to-white/40 p-5 shadow-lg shadow-slate-200 duration-150 ease-in hover:bg-white">
         <div className="flex items-center justify-between">
           {/* Icon */}
           <div className="text-primary-brand group-hover:bg-primary-brand flex h-14 w-14 items-center justify-center rounded-full bg-white group-hover:text-white">
@@ -56,11 +65,17 @@ export const CardAgent = ({ id_collection, name, status }: CardProps) => {
                   View
                 </Link>
               </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link href={`/admin/`} className="block w-full">
+                  Edit
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 variant="destructive"
-                onSelect={() => {
-                  handleDelete(id_collection);
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(id_collection, id);
                 }}
               >
                 Delete
@@ -69,26 +84,21 @@ export const CardAgent = ({ id_collection, name, status }: CardProps) => {
           </DropdownMenu>
         </div>
 
-        {/* Wrap Link hanya pada konten utama, bukan seluruh card */}
-        <Link href={`/admin/${id_collection}/preview`} className="mt-8 block">
+        <div>
           <h2 className="hover:text-primary-brand mb-1 text-xl font-bold text-slate-700 capitalize">
             {name}
           </h2>
-          {/* <p className="mb-4 line-clamp-1 text-sm text-slate-500 capitalize">
+          <p className="line-clamp-1 text-sm text-slate-500 capitalize">
             {description}
-          </p> */}
+          </p>
           {/* <div className="text-sm text-gray-500">
             Created on:{" "}
             <span className="opacity-65">
               {dateFormatter(createdOn || new Date().toISOString())}
             </span>
           </div> */}
-          <div className="text-xs text-gray-500">
-            <span>Agent ID: </span>
-            <span className="opacity-65">{id_collection}</span>
-          </div>
-        </Link>
+        </div>
       </div>
-    </>
+    </Link>
   );
 };

@@ -10,17 +10,8 @@ import {
 } from "@/components/ui/dialog";
 import { formatBytes } from "@/lib/utils";
 
-import {
-  CircleQuestionMarkIcon,
-  FileIcon,
-  GlobeIcon,
-  Loader2,
-  MessageCircleMoreIcon,
-  Upload,
-} from "lucide-react";
-import { FormEvent, startTransition, useActionState, useState } from "react";
-import addDataSourceAction from "./actions/add-data-source";
-import { Alert, AlertTitle } from "@/components/ui/alert";
+import { FileIcon, GlobeIcon, Loader2, Upload } from "lucide-react";
+import { FormEvent, useState } from "react";
 import revalidateDataSourceAction from "./actions/revalidate-data-source";
 
 type DataSourceType = "document" | "text";
@@ -98,10 +89,6 @@ export type ActionStateType = {
   message: string;
 };
 
-const initialState: ActionStateType = {
-  message: "",
-};
-
 const DocumentFormUpload = ({
   collectionId,
   setDialogClose,
@@ -111,10 +98,7 @@ const DocumentFormUpload = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
-  // const [state, action, isPending] = useActionState(
-  //   addDataSourceAction,
-  //   initialState,
-  // );
+  const [error, setError] = useState<any>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -123,6 +107,7 @@ const DocumentFormUpload = ({
   };
 
   async function handleUpload(e: FormEvent<HTMLFormElement>) {
+    console.log("Handling upload");
     e.preventDefault();
     setLoading(true);
     const formData = new FormData(e.currentTarget);
@@ -131,10 +116,24 @@ const DocumentFormUpload = ({
       // setState({ message: "No file provided" });
       return;
     }
-    await fetch("/api/data-source", {
+    const res = await fetch("/api/data-source", {
       method: "POST",
       body: formData,
     });
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      setError({ message: errorData });
+      setLoading(false);
+      return;
+    }
+
+    const data = await res.json();
+    // setState({ message: data.message });
+    console.log("File uploaded successfully:", data);
+
+    console.log("Data source added:", data);
+
     await revalidateDataSourceAction(formData.get("id_collection") as string);
     setLoading(false);
     setDialogClose();
@@ -164,6 +163,7 @@ const DocumentFormUpload = ({
           name="file"
           onChange={handleFileChange}
           className="absolute opacity-0"
+          // accept=".pdf,.docx,.txt,.md,.csv,.image/*"
         />
       </label>
       <input

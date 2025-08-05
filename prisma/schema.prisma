@@ -20,9 +20,11 @@ model agents {
   iframe_width  String?        @db.VarChar(20)
   iframe_height String?        @db.VarChar(20)
   iframe_theme  String?        @db.VarChar(20)
-  id_collection String?        @db.VarChar(100)
+  id_collection String?        @unique @db.VarChar(100)
   users         users          @relation(fields: [owner_id], references: [id], onUpdate: Restrict, map: "agents_ibfk_1")
   data_sources  data_sources[]
+  setting       setting?
+  chat_sesion   ChatSession[]
 
   @@index([id], map: "ix_agents_id")
   @@index([owner_id], map: "owner_id")
@@ -39,12 +41,14 @@ model data_sources {
   source_path   String?   @db.VarChar(500)
   content       String?   @db.Text
   file_type     String?   @db.VarChar(10)
-  status        String?   @db.VarChar(20)
+  is_trained    Boolean   @default(false)
+  file_size     Int?      @db.Int
   chunk_count   Int?
   error_message String?   @db.Text
   created_at    DateTime? @default(now()) @db.DateTime(0)
   updated_at    DateTime? @default(now()) @db.DateTime(0)
   agent_id      Int
+  id_collection String?   @db.VarChar(100)
   agents        agents    @relation(fields: [agent_id], references: [id], onUpdate: Restrict, map: "data_sources_ibfk_1")
 
   @@index([agent_id], map: "agent_id")
@@ -73,4 +77,56 @@ model users {
 enum users_role {
   SUPER_ADMIN
   ADMIN
+}
+
+model setting {
+  id           Int     @id @default(autoincrement())
+  agent_id     Int     @unique
+  agent        agents  @relation(fields: [agent_id], references: [id])
+  greetings    String
+  leave_taking String?
+}
+
+model ChatSession {
+  id        String    @id @default(uuid())
+  name      String
+  email     String
+  ipAddress String?   @db.VarChar(45)
+  userAgent String?   @db.Text
+  createdAt DateTime  @default(now())
+  endedAt   DateTime?
+  agent     agents    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  agentId   Int
+
+  messages ChatMessage[]
+
+  @@index([email])
+  @@index([createdAt])
+}
+
+model ChatMessage {
+  id        String      @id @default(uuid())
+  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId String
+
+  sender      Sender // enum: 'user' or 'bot'
+  message     String
+  messageType MessageType @default(TEXT)
+  metadata    Json?
+  createdAt   DateTime    @default(now())
+
+  @@index([sessionId])
+  @@index([createdAt])
+}
+
+enum Sender {
+  user
+  bot
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  FILE
+  OTHER
 }

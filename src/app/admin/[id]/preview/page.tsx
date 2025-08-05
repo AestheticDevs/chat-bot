@@ -1,13 +1,25 @@
+import { prisma } from "@/lib/prisma";
 import ChatBox from "./chat-box";
 
-export default async function Page(props: any) {
-  const { id } = await props.params; // pakai await di object destructuring
-  return (
-    // Wrapper
-    <div className="w-full grow flex flex-col overflow-y-auto h-full">
-      <div className="text-2xl font-bold mb-6">Preview </div>
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const id = (await params).id;
 
-      <ChatBox collection_id={id} />
+  const agent = await prisma.agents.findFirst({
+    where: {
+      id_collection: id,
+    },
+    include: { setting: true },
+  });
+
+  return (
+    <div className="flex h-full w-full grow flex-col overflow-y-auto">
+      {/* <div className="mb-6 text-2xl font-bold">Preview </div> */}
+
+      <ChatBox collection_id={id} agent={agent} />
     </div>
   );
 }

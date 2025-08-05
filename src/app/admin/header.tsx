@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 
 import {
@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
 import { useLoadingStore } from "@/store/useLoadingStore";
-import Loader from "../Loader";
+import Loader from "@/components/Loader";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const Header = () => {
@@ -32,7 +32,7 @@ export const Header = () => {
 
   const { isLoading, setLoading } = useLoadingStore();
 
-  console.log(open);
+  // console.log(open);
   const router = useRouter();
 
   useEffect(() => {

@@ -1,29 +1,6 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-} from "@/components/ui/sidebar";
-import {
-  Bot,
-  Database,
-  Edit,
-  Eye,
-  LayoutDashboard,
-  Mail,
-  Paperclip,
-  Settings,
-} from "lucide-react";
+import { Bot, Database, Eye, LayoutDashboard, Paperclip, Settings } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
@@ -39,7 +16,7 @@ export const SidebarComponent = () => {
   const pathSegments = onPath.split("/");
   const currentId = pathSegments[2];
 
-  console.log(currentId);
+  // console.log(currentId);
 
   const agent = {
     name: "Geen",
@@ -61,6 +38,7 @@ export const SidebarComponent = () => {
       icon: Eye,
       match: (path: string) =>
         path.includes("/admin/") && path.endsWith("/preview"),
+      disable: false,
     },
     {
       title: "Settings",
@@ -68,37 +46,39 @@ export const SidebarComponent = () => {
       icon: Settings,
       match: (path: string) =>
         path.includes("/admin/") && path.endsWith("/settings"),
-      disable: true,
+      disable: false,
     },
-    {
-      title: "Customize",
-      url: `/admin/${currentId}/customize`,
-      icon: Edit,
-      match: (path: string) =>
-        path.includes("/admin/") && path.endsWith("/customize"),
-      disable: true,
-    },
+    // {
+    //   title: "Customize",
+    //   url: `/admin/${currentId}/customize`,
+    //   icon: Edit,
+    //   match: (path: string) =>
+    //     path.includes("/admin/") && path.endsWith("/customize"),
+    //   disable: true,
+    // },
     {
       title: "Data Source",
       url: `/admin/${currentId}/data-source`,
       icon: Database,
       match: (path: string) =>
         path.includes("/admin/") && path.endsWith("/data-source"),
+      disable: false,
     },
-    {
-      title: "Inbox",
-      url: `/admin/${currentId}/inbox`,
-      icon: Mail,
-      match: (path: string) =>
-        path.includes("/admin/") && path.endsWith("/inbox"),
-      disable: true,
-    },
+    // {
+    //   title: "Inbox",
+    //   url: `/admin/${currentId}/inbox`,
+    //   icon: Mail,
+    //   match: (path: string) =>
+    //     path.includes("/admin/") && path.endsWith("/inbox"),
+    //   disable: true,
+    // },
     {
       title: "Embed",
       url: `/admin/${currentId}/embed`,
       icon: Paperclip,
       match: (path: string) =>
         path.includes("/admin/") && path.endsWith("/embed"),
+      disable: false,
     },
   ];
 

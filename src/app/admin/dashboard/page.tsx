@@ -1,13 +1,11 @@
-import AgentForm from "./AgentForm";
-import { AgentList } from "./AgentList";
-import { API_URL } from "@/lib/shared";
-import { type ListCollectionResult } from "@/types/agent.types";
+import { prisma } from "@/lib/prisma";
+import AgentForm from "./agen-form";
+import { CardAgent } from "./card-agent";
+import { AgentList } from "./agent-list";
 
 export const dynamic = "force-dynamic";
 
 const page = async () => {
-  const res = await fetch(`${API_URL}/collections`);
-  const data = (await res.json()) as ListCollectionResult;
   return (
     // Wrapper
     <div className="w-full">
@@ -17,7 +15,7 @@ const page = async () => {
           <AgentForm />
         </div>
       </div>
-      <AgentList collections={data.result.collections} />
+      <AgentList />
     </div>
   );
 };

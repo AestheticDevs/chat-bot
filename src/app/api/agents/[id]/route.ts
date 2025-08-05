@@ -10,10 +10,52 @@ function getTokenFromCookies(cookieHeader: string | null) {
   return match ? match[1] : null;
 }
 
-export async function DELETE(
+export async function GET(
   req: Request,
-  { params }: { params: any },
+  { params }: { params: Promise<{ id: string }> },
 ) {
+  const collectionId = (await params).id;
+
+  const data = await prisma.agents.findFirst({
+    where: {
+      id_collection: collectionId,
+    },
+    include: {
+      setting: true
+    }
+  });
+
+  const response = new Response(
+    JSON.stringify({
+      status: "success",
+      message: "",
+      result: data,
+    }),
+    {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
+    },
+  );
+  return response;
+}
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    },
+  });
+}
+
+export async function DELETE(req: Request, { params }: { params: any }) {
   try {
     const token = getTokenFromCookies(req.headers.get("cookie"));
     if (!token) {

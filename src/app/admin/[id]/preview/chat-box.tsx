@@ -5,7 +5,7 @@ import {
   Copy,
   Loader2Icon,
   SendHorizonal,
-  SendIcon,
+  SparklesIcon,
   TriangleAlert,
 } from "lucide-react";
 import {
@@ -18,7 +18,8 @@ import {
 import chatWithCollection from "./action";
 import { Button } from "@/components/ui/button";
 import { LOCAL_ENV } from "@/lib/shared";
-import { markdownToHtml } from "@/lib/utils";
+import { Prisma } from "@prisma/client";
+import { AutosizeTextarea } from "@/components/autoresize-textarea";
 
 export interface ChatType {
   question: string;
@@ -30,7 +31,13 @@ export interface ChatType {
   };
 }
 
-export default function ChatBox({ collection_id }: { collection_id: string }) {
+export default function ChatBox({
+  collection_id,
+  agent,
+}: {
+  collection_id: string;
+  agent: Prisma.agentsGetPayload<{ include: { setting: true } }> | null;
+}) {
   const [conversation, setConversation] = useState<ChatType[]>([]);
   async function sendQuestionAction(formData: FormData) {
     const conversation = await chatWithCollection(
@@ -53,27 +60,31 @@ export default function ChatBox({ collection_id }: { collection_id: string }) {
       <div className="relative flex grow flex-col gap-4 overflow-y-auto bg-slate-50">
         <Conversation
           conversation={conversation}
+          greetings={agent?.setting?.greetings}
           sendQuestionAction={sendQuestionAction}
         />
       </div>
 
       {/* Footer */}
-      <div className="bg-slate-100 p-5 py-4 text-center">
+      {/* <div className="bg-slate-100 p-5 py-4 text-center">
         <div className="text-sm font-semibold text-slate-500">
           Powered by <span className="text-primary-brand">KSPSTK</span>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
 
 function Conversation({
   conversation,
+  greetings,
   sendQuestionAction,
 }: {
   conversation: ChatType[];
+  greetings?: string;
   sendQuestionAction: (formData: FormData) => Promise<void>;
 }) {
+  const [loading, setLoading] = useState(false);
   const [conversationOptimistic, addOptimisticConversation] = useOptimistic<
     ChatType[],
     string
@@ -93,16 +104,18 @@ function Conversation({
   const bottomDivRef = useRef<HTMLDivElement>(null);
 
   function formAction(formData: FormData) {
+    setLoading(true);
     addOptimisticConversation(formData.get("question") as string);
     formRef.current?.reset();
     startTransition(async () => {
       await sendQuestionAction(formData);
+      setLoading(false);
     });
   }
 
   useEffect(() => {
     if (bottomDivRef.current) {
-      bottomDivRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+      // bottomDivRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
     }
   }, [conversationOptimistic]);
 
@@ -110,9 +123,14 @@ function Conversation({
     <>
       {/* Message Container */}
       <div className="flex flex-1 grow flex-col overflow-y-auto p-8">
-        <small className="text-center text-slate-500">
+        <small className="mb-5 text-center text-slate-500">
           {new Date().toLocaleDateString()}
         </small>
+        {greetings ? (
+          <div className="mb-4">
+            <p>{greetings}</p>
+          </div>
+        ) : null}
         {conversationOptimistic.map((item, i) => {
           return (
             <div key={i} className="flex flex-col gap-4">
@@ -130,17 +148,25 @@ function Conversation({
       </div>
 
       <form action={formAction} ref={formRef} className="p-8 pt-2">
-        <div className="relative">
-          <input
-            type="text"
-            className="w-full p-4 outline-0 border rounded-lg"
-            placeholder="Ketik pertanyaan anda..."
-            name="question"
-            required
-          />
-          <Button variant={"default"} className="rounded-lg px-4 absolute right-3 top-1/2 -translate-y-1/2">
-            <SendHorizonal className="cursor-pointer text-white" />
-          </Button>
+        <div>
+          <div className="flex items-start gap-2 rounded-lg border pr-4">
+            <AutosizeTextarea
+              className="resize-none border-none bg-transparent p-4 text-base focus-visible:border-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-0"
+              placeholder="Ketik pertanyaan disini"
+              maxHeight={160}
+              name="question"
+              onKeyUp={(e) =>
+                e.key === "Enter" ? formRef.current?.requestSubmit() : null
+              }
+            />
+            <Button
+              variant={"default"}
+              className="my-4 rounded-lg px-4"
+              disabled={loading}
+            >
+              <SendHorizonal className="cursor-pointer text-white" />
+            </Button>
+          </div>
         </div>
       </form>
     </>
@@ -148,8 +174,20 @@ function Conversation({
 }
 
 function QuestionBubble({ text }: { text: string }) {
+  const questionBubleRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (questionBubleRef.current) {
+      questionBubleRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  }, []);
   return (
-    <div className="prose mb-2 ml-auto block w-fit max-w-3/4 rounded-2xl rounded-tr-none bg-slate-100 p-3 px-4 text-end">
+    <div
+      className="prose mb-2 ml-auto block w-fit max-w-3/4 rounded-2xl rounded-tr-none bg-slate-100 p-3 px-4 text-end"
+      ref={questionBubleRef}
+    >
       {text}
     </div>
   );
@@ -161,10 +199,17 @@ function AnswerBuble({ isLoading, text, html, isError }: ChatType["answer"]) {
     setCopied(true);
     navigator.clipboard.writeText(text);
   }
+  const answerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isLoading && answerRef.current) {
+      answerRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [isLoading]);
 
   if (isError) {
     return (
-      <p className="text-destructive">
+      <p className="text-destructive mb-6">
         <TriangleAlert strokeWidth={1.5} className="mb-2" /> Something went
         wrong!
         {LOCAL_ENV ? (
@@ -185,15 +230,24 @@ function AnswerBuble({ isLoading, text, html, isError }: ChatType["answer"]) {
           <Loader2Icon size={16} strokeWidth={1.5} className="animate-spin" />
         </p>
       ) : (
-        <div>
+        <div ref={answerRef}>
           <div
             className="prose mb-3"
             dangerouslySetInnerHTML={{ __html: html as string }}
           ></div>
-          <Button variant={"outline"} size={"sm"} onClick={copyToClipboard}>
-            {copied ? <CheckCheck size={16} /> : <Copy size={16} />}
-            Copy
-          </Button>
+          <div>
+            <div className="mb-3 flex items-center gap-1 text-slate-600">
+              <SparklesIcon className="size-3" strokeWidth={1.5} />
+              <small>
+                Jawaban ini dihasilkan oleh AI dan mungkin tidak sepenuhnya
+                akurat.
+              </small>
+            </div>
+            <Button variant={"outline"} size={"sm"} onClick={copyToClipboard}>
+              {copied ? <CheckCheck size={16} /> : <Copy size={16} />}
+              Copy
+            </Button>
+          </div>
         </div>
       )}
     </div>

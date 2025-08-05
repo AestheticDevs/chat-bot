@@ -1,5 +1,5 @@
-import { SidebarComponent } from "@/components/admin/Sidebar";
-import { Header } from "@/components/admin/Header";
+import { SidebarComponent } from "@/app/admin/sidebar";
+import { Header } from "@/app/admin/header";
 import { Button } from "@/components/ui/button";
 // import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";
 
@@ -18,7 +18,7 @@ const layout = ({
           <SidebarComponent />
 
           {/* Page Content */}
-          <main className="flex flex-1 flex-col overflow-y-auto ml-8">
+          <main className="ml-8 flex flex-1 flex-col overflow-y-auto">
             {children}
           </main>
         </div>

@@ -6,22 +6,19 @@ export async function POST(req: Request) {
   const body = await req.json();
   const { message, id_collection } = body;
 
-  console.log("Received message:", message, id_collection);
-  const res = await fetch(
-    `${API_URL}/chat`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        message,
-        id_collection: id_collection,
-        vector_store: "qdrant",
-      }),
+  // console.log("Received message:", message, id_collection);
+  const res = await fetch(`${API_URL}/chat`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
-  console.log(res)
+    body: JSON.stringify({
+      message,
+      id_collection: id_collection,
+      vector_store: "qdrant",
+    }),
+  });
+  // console.log(res)
 
   if (!res.ok) {
     return NextResponse.json({
@@ -48,9 +45,7 @@ export async function POST(req: Request) {
       status: 200,
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        "Access-Control-Allow-Origin": "*", // allow all origins
       },
     },
   );
@@ -59,9 +54,9 @@ export async function POST(req: Request) {
 
 export async function OPTIONS() {
   return new Response(null, {
-    status: 204,
+    status: 200,
     headers: {
-      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": "*", // allow all origins
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
     },

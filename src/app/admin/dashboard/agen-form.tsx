@@ -9,16 +9,19 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { createCollection } from "@/app/action/create-collection.action";
-import { startTransition, useActionState } from "react";
+import { startTransition, useActionState, useEffect, useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { CheckCircle2Icon } from "lucide-react";
+import { CheckCircle2Icon, PlusIcon } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { createAgentAction } from "./action/create-agent-action";
 
 const initialState = { message: "", success: null };
 
 export default function AgentForm() {
+  const [open, setOpen] = useState(false);
   const [state, formAction, isPending] = useActionState(
-    createCollection,
+    createAgentAction,
     initialState,
   );
 
@@ -26,12 +29,28 @@ export default function AgentForm() {
     startTransition(formAction);
   }
 
+  function listenDialogOpen(o: boolean) {
+    if (o) {
+      clearActionState();
+    }
+    setOpen(o);
+  }
+
+  useEffect(() => {
+    if (state.success === true) {
+      setTimeout(() => {
+        setOpen(false);
+        clearActionState();
+      }, 100);
+    }
+  }, [state.success]);
+
   return (
-    <Dialog onOpenChange={(o) => (o ? null : clearActionState())}>
+    <Dialog onOpenChange={listenDialogOpen} open={open}>
       <DialogTrigger>
         <Button asChild>
           <div className="bg-primary-brand text-primary-foreground hover:bg-primary-brand/90 shadow-xs">
-            Add agent +
+            Add agent <PlusIcon className="h-4 w-4" />
           </div>
         </Button>
       </DialogTrigger>
@@ -42,22 +61,31 @@ export default function AgentForm() {
             Isi detail untuk membuat agen baru untuk bot obrolan Anda.
           </DialogDescription>
         </DialogHeader>
-        {state.success === true ? (
-          <Alert>
+        {state.success === false ? (
+          <Alert variant={"destructive"}>
             <CheckCircle2Icon />
-            <AlertTitle>Berhasil!</AlertTitle>
+            <AlertTitle>Gagal!</AlertTitle>
             <AlertDescription>{state.message}</AlertDescription>
           </Alert>
         ) : null}
         <form action={formAction} className="max-w-md space-y-4">
           <div>
-            <label className="block text-sm font-medium">Nama Collection</label>
-            <input
+            <label className="mb-2 block text-sm font-medium">Nama Agen</label>
+            <Input
               type="text"
-              className="mt-1 w-full rounded-md border px-3 py-2 text-black focus:ring-2 focus:ring-teal-500 focus:outline-none"
-              name="collection_name"
+              className=""
+              name="name"
+              placeholder="Masukkan nama agen"
               required
             />
+          </div>
+          <div>
+            <label className="mb-2 block text-sm font-medium">Deskripsi</label>
+            <Textarea
+              placeholder="Deskripsi"
+              name="description"
+              required
+            ></Textarea>
           </div>
 
           <Button

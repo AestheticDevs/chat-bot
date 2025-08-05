@@ -1,27 +1,23 @@
 import { NextResponse } from "next/server";
 import { jwtVerify } from "jose";
-import { prisma } from "@/lib/prisma";
 import { API_URL } from "@/lib/shared";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
+import { prisma } from "@/lib/prisma";
 
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
-
-function getTokenFromCookies(cookieHeader: string | null): string | null {
-  if (!cookieHeader) return null;
-  const match = cookieHeader.match(/(?:^|;\s*)token=([^;]+)/);
-  return match ? match[1] : null;
-}
 
 export async function POST(req: Request) {
   try {
     // Ambil token dari cookies
-    const token = getTokenFromCookies(req.headers.get("cookie"));
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token");
+
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Verifikasi token
-    const { payload } = await jwtVerify(token, JWT_SECRET);
+    const { payload } = await jwtVerify(token.value, JWT_SECRET);
     const userId = payload.id as string; // id dari token
     const formData = await req.formData();
 
@@ -34,26 +30,44 @@ export async function POST(req: Request) {
     const proxyFormData = new FormData();
     proxyFormData.set("file", file);
 
-    const res = await fetch(
-      `${API_URL}/upload?vector_store=qdrant&id_collection=${id_collection}&force_recreate=false`,
-      {
-        method: "POST",
-        body: proxyFormData, // this will send as multipart/form-data
+    // const res = await fetch(
+    //   `${API_URL}/upload?vector_store=qdrant&id_collection=${id_collection}&force_recreate=false`,
+    //   {
+    //     method: "POST",
+    //     body: proxyFormData, // this will send as multipart/form-data
+    //   },
+    // );
+
+    // const data = await res.json();
+
+    // if (!res.ok) {
+    //   return NextResponse.json(
+    //     { error: data.message || "Upload failed" },
+    //     { status: res.status },
+    //   );
+    // }
+
+    const agent = await prisma.agents.findFirst({
+      where: {
+        id_collection: id_collection,
       },
-    );
+    });
 
-    const data = await res.json();
-
-    if (!res.ok) {
-      return NextResponse.json(
-        { error: data.message || "Upload failed" },
-        { status: res.status },
-      );
+    if (agent) {
+      await prisma.data_sources.create({
+        data: {
+          name: file.name,
+          source_type: file.type,
+          file_size: file.size,
+          id_collection: id_collection,
+          agent_id: agent.id,
+        },
+      });
     }
 
     revalidatePath(`/admin/${id_collection}/data-source`);
 
-    return NextResponse.json({ data });
+    return NextResponse.json({ agent });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
