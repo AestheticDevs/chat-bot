@@ -15,7 +15,7 @@ export default async function deleteDataSourceAction(
   });
 
   await prisma.data_sources.delete({
-    where: { id: 1 },
+    where: { id: dbId },
   });
 
   if (res.ok) {

@@ -17,21 +17,23 @@ import deleteDataSourceAction from "./actions/delete-data-source";
 import { toast } from "sonner";
 
 export default function DeleteDataSourceAlert({
-  id,
+  dbId,
+  documentId,
   collectionId,
 }: {
-  id: number;
+  dbId: number; // id on database
+  documentId: number;
   collectionId: string;
 }) {
   function handleDelete() {
-    // const promise = deleteDataSourceAction(id, collectionId);
+    const promise = deleteDataSourceAction(dbId, collectionId, documentId);
 
-    // toast.promise(promise, {
-    //   loading: "Menghapus data source...",
-    //   success: (data) => {
-    //     return data.message;
-    //   },
-    // });
+    toast.promise(promise, {
+      loading: "Menghapus data source...",
+      success: (data) => {
+        return data.message;
+      },
+    });
   }
 
   return (

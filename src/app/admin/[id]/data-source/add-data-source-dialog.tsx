@@ -13,6 +13,8 @@ import { formatBytes } from "@/lib/utils";
 import { FileIcon, GlobeIcon, Loader2, Upload } from "lucide-react";
 import { FormEvent, useState } from "react";
 import revalidateDataSourceAction from "./actions/revalidate-data-source";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 type DataSourceType = "document" | "text";
 
@@ -174,6 +176,10 @@ const DocumentFormUpload = ({
       />
       {file && (
         <div>
+          <div className="flex flex-col gap-2 mb-4">
+            <Label>Simpan Sebagai</Label>
+            <Input defaultValue={file.name.split('.').slice(0, -1).join('.')} />
+          </div>
           <strong>File details:</strong>
           <ul className="flex flex-col gap-2">
             <li className="whitespace-normal">

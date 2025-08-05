@@ -1,6 +1,14 @@
 "use client";
 
-import { Bot, Database, Eye, LayoutDashboard, Paperclip, Settings } from "lucide-react";
+import {
+  Bot,
+  Database,
+  Eye,
+  LayoutDashboard,
+  MessageSquareText,
+  Paperclip,
+  Settings,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
@@ -40,14 +48,7 @@ export const SidebarComponent = () => {
         path.includes("/admin/") && path.endsWith("/preview"),
       disable: false,
     },
-    {
-      title: "Settings",
-      url: `/admin/${currentId}/settings`,
-      icon: Settings,
-      match: (path: string) =>
-        path.includes("/admin/") && path.endsWith("/settings"),
-      disable: false,
-    },
+
     // {
     //   title: "Customize",
     //   url: `/admin/${currentId}/customize`,
@@ -64,20 +65,28 @@ export const SidebarComponent = () => {
         path.includes("/admin/") && path.endsWith("/data-source"),
       disable: false,
     },
-    // {
-    //   title: "Inbox",
-    //   url: `/admin/${currentId}/inbox`,
-    //   icon: Mail,
-    //   match: (path: string) =>
-    //     path.includes("/admin/") && path.endsWith("/inbox"),
-    //   disable: true,
-    // },
+    {
+      title: "History",
+      url: `/admin/${currentId}/history`,
+      icon: MessageSquareText,
+      match: (path: string) =>
+        path.includes("/admin/") && path.endsWith("/inbox"),
+      disable: false,
+    },
     {
       title: "Embed",
       url: `/admin/${currentId}/embed`,
       icon: Paperclip,
       match: (path: string) =>
         path.includes("/admin/") && path.endsWith("/embed"),
+      disable: false,
+    },
+    {
+      title: "Settings",
+      url: `/admin/${currentId}/settings`,
+      icon: Settings,
+      match: (path: string) =>
+        path.includes("/admin/") && path.endsWith("/settings"),
       disable: false,
     },
   ];

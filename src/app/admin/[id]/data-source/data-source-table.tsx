@@ -86,7 +86,8 @@ export default async function DataSourceTable({
                       </a>
                     </Button>
                     <DeleteDataSourceAlert
-                      id={source.id}
+                      dbId={source.id}
+                      documentId={documents[i]?.id}
                       collectionId={collectionId}
                     />
                   </TableCell>
