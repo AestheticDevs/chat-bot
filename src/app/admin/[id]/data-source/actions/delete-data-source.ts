@@ -1,15 +1,21 @@
 "use server";
 
+import { prisma } from "@/lib/prisma";
 import { API_URL } from "@/lib/shared";
 import { revalidatePath } from "next/cache";
 
 export default async function deleteDataSourceAction(
-  id: number,
+  dbId: number,
   collectionId: string,
+  documentId: number,
 ) {
   // console.log(`Deleting data source with ID: ${id} from collection: ${collectionId}`);
-  const res = await fetch(`${API_URL}/documents/${collectionId}/${id}`, {
+  const res = await fetch(`${API_URL}/documents/${collectionId}/${documentId}`, {
     method: "DELETE",
+  });
+
+  await prisma.data_sources.delete({
+    where: { id: 1 },
   });
 
   if (res.ok) {

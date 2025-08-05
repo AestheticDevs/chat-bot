@@ -24,14 +24,14 @@ export default function DeleteDataSourceAlert({
   collectionId: string;
 }) {
   function handleDelete() {
-    const promise = deleteDataSourceAction(id, collectionId);
+    // const promise = deleteDataSourceAction(id, collectionId);
 
-    toast.promise(promise, {
-      loading: "Menghapus data source...",
-      success: (data) => {
-        return data.message;
-      },
-    });
+    // toast.promise(promise, {
+    //   loading: "Menghapus data source...",
+    //   success: (data) => {
+    //     return data.message;
+    //   },
+    // });
   }
 
   return (

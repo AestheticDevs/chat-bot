@@ -30,22 +30,22 @@ export async function POST(req: Request) {
     const proxyFormData = new FormData();
     proxyFormData.set("file", file);
 
-    // const res = await fetch(
-    //   `${API_URL}/upload?vector_store=qdrant&id_collection=${id_collection}&force_recreate=false`,
-    //   {
-    //     method: "POST",
-    //     body: proxyFormData, // this will send as multipart/form-data
-    //   },
-    // );
+    const res = await fetch(
+      `${API_URL}/upload?vector_store=qdrant&id_collection=${id_collection}&force_recreate=false`,
+      {
+        method: "POST",
+        body: proxyFormData, // this will send as multipart/form-data
+      },
+    );
 
-    // const data = await res.json();
+    const data = await res.json();
 
-    // if (!res.ok) {
-    //   return NextResponse.json(
-    //     { error: data.message || "Upload failed" },
-    //     { status: res.status },
-    //   );
-    // }
+    if (!res.ok) {
+      return NextResponse.json(
+        { error: data.message || "Upload failed" },
+        { status: res.status },
+      );
+    }
 
     const agent = await prisma.agents.findFirst({
       where: {

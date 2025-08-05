@@ -13,18 +13,26 @@ import { Button } from "@/components/ui/button";
 import { DownloadIcon } from "lucide-react";
 import DeleteDataSourceAlert from "./delete-data-source-alert";
 import { prisma } from "@/lib/prisma";
+import { API_URL } from "@/lib/shared";
 
 export default async function DataSourceTable({
   collectionId,
 }: {
   collectionId: string;
 }) {
-  // const source =
+  const res = await fetch(`${API_URL}/documents/${collectionId}`);
   const data = await prisma.data_sources.findMany({
     where: { id_collection: collectionId },
+    orderBy: {
+      created_at: 'desc'
+    }
   });
+  const dataSourceApi = await res.json();
+  const documents = dataSourceApi.documents
   return (
     <div className="mt-6 grid grid-cols-1 overflow-hidden rounded-lg bg-white">
+      {/* {JSON.stringify(documents)} */}
+      {/* {`${API_URL}/documents/${collectionId}`} */}
       <Table>
         <TableHeader className="h-14 bg-white">
           <TableRow>
@@ -57,7 +65,12 @@ export default async function DataSourceTable({
                     {formatBytes(source.file_size || 0)}
                   </TableCell>
                   <TableCell className="text-center">
-                    {source.is_trained ? (
+                    {/* {source.is_trained ? (
+                      <Badge className="bg-teal-500">Trained</Badge>
+                    ) : (
+                      <Badge className="bg-yellow-500">Processing</Badge>
+                    )} */}
+                    {documents[i]?.processing_status == "completed" ? (
                       <Badge className="bg-teal-500">Trained</Badge>
                     ) : (
                       <Badge className="bg-yellow-500">Processing</Badge>

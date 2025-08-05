@@ -185,7 +185,7 @@ function QuestionBubble({ text }: { text: string }) {
   }, []);
   return (
     <div
-      className="prose mb-2 ml-auto block w-fit max-w-3/4 rounded-2xl rounded-tr-none bg-slate-100 p-3 px-4 text-end"
+      className="prose mb-2 ml-auto block w-fit max-w-3/4 rounded-2xl rounded-tr-none bg-slate-100 p-3 px-4 text-end whitespace-normal break-words"
       ref={questionBubleRef}
     >
       {text}
