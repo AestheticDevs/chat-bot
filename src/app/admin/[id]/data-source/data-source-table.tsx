@@ -24,11 +24,11 @@ export default async function DataSourceTable({
   const data = await prisma.data_sources.findMany({
     where: { id_collection: collectionId },
     orderBy: {
-      created_at: 'desc'
-    }
+      created_at: "desc",
+    },
   });
   const dataSourceApi = await res.json();
-  const documents = dataSourceApi.documents
+  const documents = dataSourceApi.documents;
   return (
     <div className="mt-6 grid grid-cols-1 overflow-hidden rounded-lg bg-white">
       {/* {JSON.stringify(documents)} */}
@@ -72,6 +72,8 @@ export default async function DataSourceTable({
                     )} */}
                     {documents[i]?.processing_status == "completed" ? (
                       <Badge className="bg-teal-500">Trained</Badge>
+                    ) : documents[i]?.processing_status == "failed" ? (
+                      <Badge className="bg-red-500">Failed</Badge>
                     ) : (
                       <Badge className="bg-yellow-500">Processing</Badge>
                     )}
