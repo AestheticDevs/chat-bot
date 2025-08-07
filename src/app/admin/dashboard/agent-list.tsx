@@ -10,6 +10,11 @@ export const AgentList = async () => {
   });
   return (
     <div className="mt-6 grid grid-cols-4 gap-6">
+      {data?.length === 0 ? (
+        <div className="text-muted-foreground col-span-4">
+          Belum ada agent ditambahkan. silahkan tambahkan agen terlebih dahulu.
+        </div>
+      ) : null}
       {data?.map((item, index) => (
         <CardAgent
           key={index}

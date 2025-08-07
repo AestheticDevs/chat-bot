@@ -19,8 +19,6 @@ export interface CardProps {
   status: string;
   description?: string;
   id: number;
-  // createdOn?: string;
-  // onDelete?: () => void;
 }
 export const CardAgent = ({
   id_collection,
@@ -66,7 +64,10 @@ export const CardAgent = ({
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link href={`/admin/`} className="block w-full">
+                <Link
+                  href={`/admin/${id_collection}/settings`}
+                  className="block w-full"
+                >
                   Edit
                 </Link>
               </DropdownMenuItem>

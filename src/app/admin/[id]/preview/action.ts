@@ -13,7 +13,7 @@ export default async function chatWithCollection(
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      message: question,
+      message: question.trim(),
       id_collection: collectionId,
       vector_store: "qdrant",
     }),

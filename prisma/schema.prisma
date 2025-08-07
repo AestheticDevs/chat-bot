@@ -24,7 +24,7 @@ model agents {
   users         users          @relation(fields: [owner_id], references: [id], onUpdate: Restrict, map: "agents_ibfk_1")
   data_sources  data_sources[]
   setting       setting?
-  chat_sesion   ChatSession[]
+  chat_sesion   chat_session[]
 
   @@index([id], map: "ix_agents_id")
   @@index([owner_id], map: "owner_id")
@@ -37,6 +37,7 @@ model alembic_version {
 model data_sources {
   id            Int       @id @default(autoincrement())
   name          String    @db.VarChar(200)
+  savedAs       String?
   source_type   String    @db.VarChar(20)
   source_path   String?   @db.VarChar(500)
   content       String?   @db.Text
@@ -49,7 +50,8 @@ model data_sources {
   updated_at    DateTime? @default(now()) @db.DateTime(0)
   agent_id      Int
   id_collection String?   @db.VarChar(100)
-  agents        agents    @relation(fields: [agent_id], references: [id], onUpdate: Restrict, map: "data_sources_ibfk_1")
+  description   String?
+  agents        agents    @relation(fields: [agent_id], references: [id], onUpdate: Restrict, map: "data_sources_ibfk_1", onDelete: Cascade)
 
   @@index([agent_id], map: "agent_id")
   @@index([id], map: "ix_data_sources_id")
@@ -82,12 +84,12 @@ enum users_role {
 model setting {
   id           Int     @id @default(autoincrement())
   agent_id     Int     @unique
-  agent        agents  @relation(fields: [agent_id], references: [id])
+  agent        agents  @relation(fields: [agent_id], references: [id], onDelete: Cascade)
   greetings    String
   leave_taking String?
 }
 
-model ChatSession {
+model chat_session {
   id        String    @id @default(uuid())
   name      String
   email     String
@@ -98,15 +100,15 @@ model ChatSession {
   agent     agents    @relation(fields: [agentId], references: [id], onDelete: Cascade)
   agentId   Int
 
-  messages ChatMessage[]
+  messages chat_message[]
 
   @@index([email])
   @@index([createdAt])
 }
 
-model ChatMessage {
-  id        String      @id @default(uuid())
-  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+model chat_message {
+  id        String       @id @default(uuid())
+  session   chat_session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   sessionId String
 
   sender      Sender // enum: 'user' or 'bot'

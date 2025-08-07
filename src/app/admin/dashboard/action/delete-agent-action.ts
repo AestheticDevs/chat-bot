@@ -5,7 +5,6 @@ import { API_URL } from "@/lib/shared";
 import { revalidatePath } from "next/cache";
 
 export async function deleteAgentAction(collectionId: string, id: number) {
-  console.log("deleteAgentAction", collectionId, id);
   try {
     await prisma.agents.delete({
       where: {
@@ -21,11 +20,9 @@ export async function deleteAgentAction(collectionId: string, id: number) {
   }
 
   try {
-    const res = await fetch(`${API_URL}/collections/${collectionId}`, {
+    await fetch(`${API_URL}/collections/${collectionId}`, {
       method: "DELETE",
     });
-    const data = await res.json();
-    console.log("deleteAgentAction", data);
     revalidatePath("/admin/dashboard");
   } catch (error) {
     return {
