@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     const ip = req.headers.get("x-forwarded-for") || "unknown";
     const userAgent = req.headers.get("user-agent") || null;
 
-    const session = await prisma.chatSession.create({
+    const session = await prisma.chat_session.create({
       data: {
         name,
         email,
