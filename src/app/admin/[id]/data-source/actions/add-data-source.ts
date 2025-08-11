@@ -34,41 +34,40 @@ export default async function addDataSourceAction(formData: FormData) {
 
     const proxyFormData = new FormData();
     proxyFormData.set("file", file);
-    console.log(formData)
 
-    // const res = await fetch(
-    //   `${API_URL}/upload?vector_store=qdrant&id_collection=${id_collection}&force_recreate=false`,
-    //   {
-    //     method: "POST",
-    //     body: proxyFormData,
-    //   },
-    // );
+    const res = await fetch(
+      `${API_URL}/upload?vector_store=qdrant&id_collection=${id_collection}&force_recreate=false`,
+      {
+        method: "POST",
+        body: proxyFormData,
+      },
+    );
 
-    // const data = await res.json();
+    const data = await res.json();
 
-    // if (!res.ok) {
-    //   return { message: data.message || "Upload failed", status: res.status };
-    // }
+    if (!res.ok) {
+      return { message: data.message || "Upload failed", status: res.status };
+    }
 
-    // const agent = await prisma.agents.findFirst({
-    //   where: {
-    //     id_collection: id_collection,
-    //   },
-    // });
+    const agent = await prisma.agents.findFirst({
+      where: {
+        id_collection: id_collection,
+      },
+    });
 
-    // if (agent) {
-    //   await prisma.data_sources.create({
-    //     data: {
-    //       name: file.name,
-    //       source_type: file.type,
-    //       file_size: file.size,
-    //       id_collection: id_collection,
-    //       agent_id: agent.id,
-    //       savedAs: saveAs,
-    //       description: description,
-    //     },
-    //   });
-    // }
+    if (agent) {
+      await prisma.data_sources.create({
+        data: {
+          name: file.name,
+          source_type: file.type,
+          file_size: file.size,
+          id_collection: id_collection,
+          agent_id: agent.id,
+          savedAs: saveAs,
+          description: description,
+        },
+      });
+    }
 
     revalidatePath(`/admin/${id_collection}/data-source`);
     return { message: "Upload successful", status: true };
