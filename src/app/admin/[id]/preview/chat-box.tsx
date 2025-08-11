@@ -106,7 +106,7 @@ function Conversation({
 
   function formAction(formData: FormData) {
     setLoading(true);
-    const question = formData.get("question");
+    addOptimisticConversation(formData.get("question") as string);
     formRef.current?.reset();
     startTransition(async () => {
       await sendQuestionAction(formData);
@@ -163,6 +163,7 @@ function Conversation({
               variant={"default"}
               className="my-4 rounded-lg px-4"
               disabled={loading}
+              type="submit"
             >
               <SendHorizonal className="cursor-pointer text-white" />
             </Button>

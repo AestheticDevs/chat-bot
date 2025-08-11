@@ -10,10 +10,11 @@ import {
 import { Fragment } from "react";
 import { formatBytes } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { DownloadIcon } from "lucide-react";
+import { DownloadIcon, Pen } from "lucide-react";
 import DeleteDataSourceAlert from "./delete-data-source-alert";
 import { prisma } from "@/lib/prisma";
 import { API_URL } from "@/lib/shared";
+import EditDataSourceMetadataDialog from "./edit-data-source-metadata-dialog";
 
 export default async function DataSourceTable({
   collectionId,
@@ -66,6 +67,7 @@ export default async function DataSourceTable({
                     </TableCell>
                     <TableCell className="max-w-96 break-words">
                       {source.name}
+                      {/* {JSON.stringify(source)} */}
                     </TableCell>
                     <TableCell className="text-center">
                       {source.file_type}
@@ -96,6 +98,11 @@ export default async function DataSourceTable({
                           <DownloadIcon />
                         </a>
                       </Button>
+                      
+                      <EditDataSourceMetadataDialog
+                        nama={source.savedAs}
+                        description={source.description}
+                      />
                       <DeleteDataSourceAlert
                         dbId={source.id}
                         documentId={documents[i]?.id}

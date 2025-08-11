@@ -11,11 +11,12 @@ import {
 import { formatBytes } from "@/lib/utils";
 
 import { FileIcon, GlobeIcon, Loader2, Upload } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import revalidateDataSourceAction from "./actions/revalidate-data-source";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import addDataSourceAction from "./actions/add-data-source";
+import { Textarea } from "@/components/ui/textarea";
 
 type DataSourceType = "document" | "web";
 
@@ -106,7 +107,12 @@ const DocumentFormUpload = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
+  const [fileName, setFileName] = useState<string>();
   const [error, setError] = useState<any>(null);
+
+  useEffect(() => {
+    setFileName(file?.name.split(".").slice(0, -1).join(".") ?? "");
+  }, [file]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -166,21 +172,20 @@ const DocumentFormUpload = ({
           name="file"
           onChange={handleFileChange}
           className="absolute opacity-0"
-          // accept=".pdf,.docx,.txt,.md,.csv,.image/*"
+          accept=".pdf,.docx,.txt,.xls,.xlsx"
         />
       </label>
-      <input
-        type="text"
-        name="id_collection"
-        defaultValue={collectionId}
-        hidden
-      />
       {file && (
         <div>
-          {/* <div className="mb-4 flex flex-col gap-2">
+          <div className="mb-4 flex flex-col gap-2">
             <Label>Simpan Sebagai</Label>
-            <Input defaultValue={file.name.split(".").slice(0, -1).join(".")} />
-          </div> */}
+            <Input name="saveAs" defaultValue={fileName} />
+          </div>
+
+          <div className="mb-4 flex flex-col gap-2">
+            <Label>Deskripsi</Label>
+            <Textarea name="description" />
+          </div>
           <strong>File details:</strong>
           <ul className="flex flex-col gap-2">
             <li className="whitespace-normal">
