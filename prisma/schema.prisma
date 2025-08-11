@@ -90,17 +90,17 @@ model setting {
 }
 
 model chat_session {
-  id        String    @id @default(uuid())
-  name      String
-  email     String
-  ipAddress String?   @db.VarChar(45)
-  userAgent String?   @db.Text
-  createdAt DateTime  @default(now())
-  endedAt   DateTime?
-  agent     agents    @relation(fields: [agentId], references: [id], onDelete: Cascade)
-  agentId   Int
-
-  messages chat_message[]
+  id         String         @id @default(uuid())
+  name       String
+  email      String
+  userAgent  String?        @db.Text
+  createdAt  DateTime       @default(now())
+  endedAt    DateTime?
+  agent      agents         @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  agentId    Int
+  usageCount Int            @default(0)
+  messages   chat_message[]
+  feedback   feedback?
 
   @@index([email])
   @@index([createdAt])
@@ -112,7 +112,7 @@ model chat_message {
   sessionId String
 
   sender      Sender // enum: 'user' or 'bot'
-  message     String
+  message     String      @db.Text
   messageType MessageType @default(TEXT)
   metadata    Json?
   createdAt   DateTime    @default(now())
@@ -131,4 +131,15 @@ enum MessageType {
   IMAGE
   FILE
   OTHER
+}
+
+model feedback {
+  id        String        @id @default(uuid())
+  session   chat_session? @relation(fields: [sessionId], references: [id])
+  sessionId String        @unique
+
+  rating  Int? // e.g., 1-5 star rating
+  comment String? @db.Text
+
+  createdAt DateTime @default(now())
 }

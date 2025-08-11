@@ -5,10 +5,20 @@ export async function POST(req: Request) {
   try {
     const { name, email, agentId } = await req.json();
 
+    console.log(name,email,agentId)
     if (!name || !email || !agentId) {
-      return NextResponse.json(
-        { status: "error", message: "Name and email are required." },
-        { status: 400 },
+      return new Response(
+        JSON.stringify({
+          status: "error",
+          message: "Name and email are required.",
+        }),
+        {
+          status: 400,
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*", // allow all origins
+          },
+        },
       );
     }
 
@@ -19,25 +29,50 @@ export async function POST(req: Request) {
       data: {
         name,
         email,
-        agentId: agentId,
-        ipAddress: ip,
+        agentId: parseInt(agentId),
         userAgent,
       },
     });
 
-    return NextResponse.json(
-      {
+    return new Response(
+      JSON.stringify({
         status: "success",
         message: "Chat session created.",
         result: session,
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*", // allow all origins
+        },
       },
-      { status: 201 },
     );
   } catch (err) {
     console.error("[CREATE_CHAT_SESSION]", err);
-    return NextResponse.json(
-      { status: "error", message: "Failed to create chat session." },
-      { status: 500 },
+    return new Response(
+      JSON.stringify({
+        status: "error",
+        message: "Failed to create chat session.",
+      }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*", // allow all origins
+        },
+      },
     );
   }
+}
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*", // allow all origins
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    },
+  });
 }

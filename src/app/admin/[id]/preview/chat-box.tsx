@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { LOCAL_ENV } from "@/lib/shared";
 import { Prisma } from "@prisma/client";
 import { AutosizeTextarea } from "@/components/autoresize-textarea";
+import { toast } from "sonner";
 
 export interface ChatType {
   question: string;
@@ -105,7 +106,7 @@ function Conversation({
 
   function formAction(formData: FormData) {
     setLoading(true);
-    addOptimisticConversation(formData.get("question") as string);
+    const question = formData.get("question");
     formRef.current?.reset();
     startTransition(async () => {
       await sendQuestionAction(formData);
@@ -155,9 +156,8 @@ function Conversation({
               placeholder="Ketik pertanyaan disini"
               maxHeight={160}
               name="question"
-              onKeyUp={(e) =>
-                e.key === "Enter" ? formRef.current?.requestSubmit() : null
-              }
+              disabled={loading}
+              required={true}
             />
             <Button
               variant={"default"}
@@ -185,7 +185,7 @@ function QuestionBubble({ text }: { text: string }) {
   }, []);
   return (
     <div
-      className="prose mb-2 ml-auto block w-fit max-w-3/4 rounded-2xl rounded-tr-none bg-slate-100 p-3 px-4 text-end whitespace-normal break-words"
+      className="prose mb-2 ml-auto block w-fit max-w-3/4 rounded-2xl rounded-tr-none bg-slate-100 p-3 px-4 text-end break-words whitespace-normal"
       ref={questionBubleRef}
     >
       {text}

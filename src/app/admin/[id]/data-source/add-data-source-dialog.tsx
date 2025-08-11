@@ -15,6 +15,7 @@ import { FormEvent, useState } from "react";
 import revalidateDataSourceAction from "./actions/revalidate-data-source";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import addDataSourceAction from "./actions/add-data-source";
 
 type DataSourceType = "document" | "text";
 
@@ -109,37 +110,32 @@ const DocumentFormUpload = ({
   };
 
   async function handleUpload(e: FormEvent<HTMLFormElement>) {
-    console.log("Handling upload");
     e.preventDefault();
     setLoading(true);
-    const formData = new FormData(e.currentTarget);
-    const fileInput = formData.get("file") as File | null;
-    if (!fileInput) {
-      // setState({ message: "No file provided" });
-      return;
-    }
-    const res = await fetch("/api/data-source", {
-      method: "POST",
-      body: formData,
-    });
+    setError(null);
 
-    if (!res.ok) {
-      const errorData = await res.json();
-      setError({ message: errorData });
+    if (!file) {
+      setError({ message: "No file provided" });
       setLoading(false);
       return;
     }
 
-    const data = await res.json();
-    // setState({ message: data.message });
-    console.log("File uploaded successfully:", data);
+    const formData = new FormData();
+    formData.set("file", file);
+    formData.set("id_collection", collectionId);
 
-    console.log("Data source added:", data);
+    const res = await addDataSourceAction(formData);
 
-    await revalidateDataSourceAction(formData.get("id_collection") as string);
+    if (res.status !== true) {
+      setError({ message: res.message });
+      setLoading(false);
+      return;
+    }
+
+    console.log("File uploaded successfully");
+    // await revalidateDataSourceAction(collectionId);
     setLoading(false);
     setDialogClose();
-    // startTransition(action);
   }
   // console.log(state.message)
   return (
@@ -176,9 +172,9 @@ const DocumentFormUpload = ({
       />
       {file && (
         <div>
-          <div className="flex flex-col gap-2 mb-4">
+          <div className="mb-4 flex flex-col gap-2">
             <Label>Simpan Sebagai</Label>
-            <Input defaultValue={file.name.split('.').slice(0, -1).join('.')} />
+            <Input defaultValue={file.name.split(".").slice(0, -1).join(".")} />
           </div>
           <strong>File details:</strong>
           <ul className="flex flex-col gap-2">
