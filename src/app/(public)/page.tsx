@@ -36,8 +36,8 @@ export default function Home() {
       <Script
         strategy="afterInteractive"
         async
-        src="https://embed.supergpt.id/widget.js?v=3"
-        data-collection-id="cb52200b8325"
+        src="https://embed.supergpt.id/widget.js?v=12"
+        data-collection-id="ba500ab51db3"
       />
     </section>
   );
