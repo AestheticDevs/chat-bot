@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import addDataSourceAction from "./actions/add-data-source";
 
-type DataSourceType = "document" | "text";
+type DataSourceType = "document" | "web";
 
 export default function AddDataSourceDialog({
   collectionId,
@@ -64,7 +64,12 @@ function DataSourceTypeSelection({
 }) {
   return (
     <div className="mt-4 grid grid-cols-2 gap-2">
-      <Button variant={"outline"} className="h-32 flex-col rounded-lg" disabled>
+      <Button
+        variant={"outline"}
+        className="h-32 flex-col rounded-lg"
+        onClick={() => setDataType("web")}
+        disabled
+      >
         <GlobeIcon className="text-primary-brand size-6" />
         <div className="mt-1.5 text-base">Website</div>
       </Button>
@@ -172,10 +177,10 @@ const DocumentFormUpload = ({
       />
       {file && (
         <div>
-          <div className="mb-4 flex flex-col gap-2">
+          {/* <div className="mb-4 flex flex-col gap-2">
             <Label>Simpan Sebagai</Label>
             <Input defaultValue={file.name.split(".").slice(0, -1).join(".")} />
-          </div>
+          </div> */}
           <strong>File details:</strong>
           <ul className="flex flex-col gap-2">
             <li className="whitespace-normal">

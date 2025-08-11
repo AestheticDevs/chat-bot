@@ -17,97 +17,107 @@ import { API_URL } from "@/lib/shared";
 
 export default async function DataSourceTable({
   collectionId,
+  search,
 }: {
   collectionId: string;
+  search?: string;
 }) {
   const res = await fetch(`${API_URL}/documents/${collectionId}`);
   const data = await prisma.data_sources.findMany({
-    where: { id_collection: collectionId },
+    where: {
+      id_collection: collectionId,
+      name: {
+        contains: search,
+      },
+    },
     orderBy: {
       created_at: "desc",
     },
   });
   const dataSourceApi = await res.json();
   const documents = dataSourceApi.documents;
+
   return (
-    <div className="mt-6 grid grid-cols-1 overflow-hidden rounded-lg bg-white">
-      {/* {JSON.stringify(documents)} */}
-      {/* {`${API_URL}/documents/${collectionId}`} */}
-      <Table>
-        <TableHeader className="h-14 bg-white">
-          <TableRow>
-            <TableHead className="w-16 text-center">No.</TableHead>
-            <TableHead className="max-w-96">Nama</TableHead>
-            <TableHead className="text-center">Tipe</TableHead>
-            <TableHead className="text-center">Ukuran</TableHead>
-            <TableHead className="text-center">Status</TableHead>
-            <TableHead className="text-center">Aksi</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.length > 0 ? (
-            data.map((source, i) => (
-              <TableRow
-                className="h-14 odd:bg-slate-50 hover:bg-slate-50"
-                key={i}
-              >
-                <Fragment>
-                  <TableCell className="text-center font-medium">
-                    {i + 1}
-                  </TableCell>
-                  <TableCell className="max-w-96 break-words">
-                    {source.name}
-                  </TableCell>
-                  <TableCell className="text-center">
-                    {source.file_type}
-                  </TableCell>
-                  <TableCell className="text-center">
-                    {formatBytes(source.file_size || 0)}
-                  </TableCell>
-                  <TableCell className="text-center">
-                    {/* {source.is_trained ? (
+    <div>
+      <div className="mt-6 grid grid-cols-1 overflow-hidden rounded-lg bg-white">
+        {/* {JSON.stringify(documents)} */}
+        {/* {`${API_URL}/documents/${collectionId}`} */}
+        <Table>
+          <TableHeader className="h-14 bg-white">
+            <TableRow>
+              <TableHead className="w-16 text-center">No.</TableHead>
+              <TableHead className="max-w-96">Nama</TableHead>
+              <TableHead className="text-center">Tipe</TableHead>
+              <TableHead className="text-center">Ukuran</TableHead>
+              <TableHead className="text-center">Status</TableHead>
+              <TableHead className="text-center">Aksi</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data.length > 0 ? (
+              data.map((source, i) => (
+                <TableRow
+                  className="h-14 odd:bg-slate-50 hover:bg-slate-50"
+                  key={i}
+                >
+                  <Fragment>
+                    <TableCell className="text-center font-medium">
+                      {i + 1}
+                    </TableCell>
+                    <TableCell className="max-w-96 break-words">
+                      {source.name}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {source.file_type}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {formatBytes(source.file_size || 0)}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {/* {source.is_trained ? (
                       <Badge className="bg-teal-500">Trained</Badge>
                     ) : (
                       <Badge className="bg-yellow-500">Processing</Badge>
                     )} */}
-                    {documents[i]?.processing_status == "completed" ? (
-                      <Badge className="bg-teal-500">Trained</Badge>
-                    ) : documents[i]?.processing_status == "failed" ? (
-                      <Badge className="bg-red-500">Failed</Badge>
-                    ) : (
-                      <Badge className="bg-yellow-500">Processing</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <Button variant={"outline"} className="mr-2" asChild>
-                      <a
-                        href={`https://kspstk.layanan.co.id/download/${collectionId}/${source.name}`}
-                        download
-                      >
-                        <DownloadIcon />
-                      </a>
-                    </Button>
-                    <DeleteDataSourceAlert
-                      dbId={source.id}
-                      documentId={documents[i]?.id}
-                      collectionId={collectionId}
-                    />
-                  </TableCell>
-                </Fragment>
+                      {documents[i]?.processing_status == "completed" ? (
+                        <Badge className="bg-teal-500">Trained</Badge>
+                      ) : documents[i]?.processing_status == "failed" ? (
+                        <Badge className="bg-red-500">Failed</Badge>
+                      ) : (
+                        <Badge className="bg-yellow-500">Processing</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Button variant={"outline"} className="mr-2" asChild>
+                        <a
+                          href={`https://kspstk.layanan.co.id/download/${collectionId}/${source.name}`}
+                          download
+                        >
+                          <DownloadIcon />
+                        </a>
+                      </Button>
+                      <DeleteDataSourceAlert
+                        dbId={source.id}
+                        documentId={documents[i]?.id}
+                        collectionId={collectionId}
+                      />
+                    </TableCell>
+                  </Fragment>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  className="text-muted-foreground text-center font-medium"
+                  colSpan={6}
+                >
+                  Belum ada data source ditambahkan
+                </TableCell>
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell
-                className="text-muted-foreground text-center font-medium"
-                colSpan={6}
-              >
-                Belum ada data source ditambahkan
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
