@@ -18,15 +18,16 @@ export default async function chatWithCollection(
       vector_store: "qdrant",
     }),
   });
-
+  
   const data = await res.json();
-
+  
   if (!res.ok) {
     return {
       question,
       answer: { text: JSON.stringify(data), isLoading: false, isError: true },
     };
   }
+  
   const answerHTML = await markdownToHtml(data.answer);
   return {
     question,

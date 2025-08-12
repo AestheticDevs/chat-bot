@@ -66,21 +66,16 @@ export default async function DataSourceTable({
                       {i + 1}
                     </TableCell>
                     <TableCell className="max-w-96 break-words">
-                      {source.name}
-                      {/* {JSON.stringify(source)} */}
+                      <span className="block">{source.name}</span>
+                      <small className="text-slate-600">{source.description}</small>
                     </TableCell>
                     <TableCell className="text-center">
-                      {source.file_type}
+                      {source.source_type}
                     </TableCell>
                     <TableCell className="text-center">
                       {formatBytes(source.file_size || 0)}
                     </TableCell>
                     <TableCell className="text-center">
-                      {/* {source.is_trained ? (
-                      <Badge className="bg-teal-500">Trained</Badge>
-                    ) : (
-                      <Badge className="bg-yellow-500">Processing</Badge>
-                    )} */}
                       {documents[i]?.processing_status == "completed" ? (
                         <Badge className="bg-teal-500">Trained</Badge>
                       ) : documents[i]?.processing_status == "failed" ? (

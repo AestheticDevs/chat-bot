@@ -38,10 +38,10 @@ model data_sources {
   id            Int       @id @default(autoincrement())
   name          String    @db.VarChar(200)
   savedAs       String?
-  source_type   String    @db.VarChar(20)
+  source_type   String    @db.VarChar(100)
   source_path   String?   @db.VarChar(500)
   content       String?   @db.Text
-  file_type     String?   @db.VarChar(10)
+  file_type     String?   @db.VarChar(100)
   is_trained    Boolean   @default(false)
   file_size     Int?      @db.Int
   chunk_count   Int?

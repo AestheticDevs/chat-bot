@@ -20,7 +20,6 @@ import { Button } from "@/components/ui/button";
 import { LOCAL_ENV } from "@/lib/shared";
 import { Prisma } from "@prisma/client";
 import { AutosizeTextarea } from "@/components/autoresize-textarea";
-import { toast } from "sonner";
 
 export interface ChatType {
   question: string;

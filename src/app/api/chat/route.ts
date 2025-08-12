@@ -58,10 +58,20 @@ export async function POST(req: Request) {
   });
 
   if (!res.ok) {
-    console.log(await res.json());
+    const data = await res.json();
+
     return NextResponse.json({
       status: "error",
-      message: "Failed to retrieve answer",
+      message: res,
+      data: {
+        message,
+        id_collection: id_collection,
+        vector_store: "qdrant",
+        chat_memory: {
+          id_cookie: session_id,
+          history,
+        },
+      },
     });
   }
 

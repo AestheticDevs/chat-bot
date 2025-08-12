@@ -131,9 +131,12 @@ const DocumentFormUpload = ({
       return;
     }
 
+    const eventTargetFormData = new FormData(e.target as HTMLFormElement);
     const formData = new FormData();
     formData.set("file", file);
     formData.set("id_collection", collectionId);
+    formData.set("saveAs", eventTargetFormData.get("saveAs") as string);
+    formData.set("description", eventTargetFormData.get("description") as string);
 
     const res = await addDataSourceAction(formData);
 
