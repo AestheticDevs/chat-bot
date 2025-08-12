@@ -6,6 +6,7 @@ import { markdownToHtml } from "@/lib/utils";
 export default async function chatWithCollection(
   question: string,
   collectionId: string,
+  memory: { question: string; answer: string; date: string }[],
 ) {
   const res = await fetch(`${API_URL}/chat`, {
     method: "POST",
@@ -16,18 +17,22 @@ export default async function chatWithCollection(
       message: question.trim(),
       id_collection: collectionId,
       vector_store: "qdrant",
+      chat_memory: {
+        id_cookie: (Math.random() * 1000).toString(),
+        history: memory,
+      },
     }),
   });
-  
+
   const data = await res.json();
-  
+
   if (!res.ok) {
     return {
       question,
       answer: { text: JSON.stringify(data), isLoading: false, isError: true },
     };
   }
-  
+
   const answerHTML = await markdownToHtml(data.answer);
   return {
     question,

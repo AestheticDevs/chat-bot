@@ -16,7 +16,7 @@ export async function POST(req: Request) {
         orderBy: {
           createdAt: "asc",
         },
-        take: 20,
+        take: 6,
       },
     },
   });

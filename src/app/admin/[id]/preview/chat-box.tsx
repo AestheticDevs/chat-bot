@@ -39,10 +39,14 @@ export default function ChatBox({
   agent: Prisma.agentsGetPayload<{ include: { setting: true } }> | null;
 }) {
   const [conversation, setConversation] = useState<ChatType[]>([]);
-  async function sendQuestionAction(formData: FormData) {
+  async function sendQuestionAction(
+    formData: FormData,
+    memory: { question: string; answer: string; date: string }[],
+  ) {
     const conversation = await chatWithCollection(
       formData.get("question") as string,
       collection_id,
+      memory,
     );
 
     startTransition(() => {
@@ -82,7 +86,10 @@ function Conversation({
 }: {
   conversation: ChatType[];
   greetings?: string;
-  sendQuestionAction: (formData: FormData) => Promise<void>;
+  sendQuestionAction: (
+    formData: FormData,
+    memory: { question: string; answer: string; date: string }[],
+  ) => Promise<void>;
 }) {
   const [loading, setLoading] = useState(false);
   const [conversationOptimistic, addOptimisticConversation] = useOptimistic<
@@ -104,11 +111,19 @@ function Conversation({
   const bottomDivRef = useRef<HTMLDivElement>(null);
 
   function formAction(formData: FormData) {
+    const memory = conversationOptimistic.slice(-10).map((item) => {
+      return {
+        question: item.question,
+        answer: item.answer.text,
+        date: new Date().toDateString(),
+      };
+    });
+
     setLoading(true);
     addOptimisticConversation(formData.get("question") as string);
     formRef.current?.reset();
     startTransition(async () => {
-      await sendQuestionAction(formData);
+      await sendQuestionAction(formData, memory);
       setLoading(false);
     });
   }
@@ -157,6 +172,12 @@ function Conversation({
               name="question"
               disabled={loading}
               required={true}
+              onKeyDown={(e) => {
+                if (e.key == "Enter" && e.shiftKey == false) {
+                  e.preventDefault();
+                  formRef.current?.requestSubmit();
+                }
+              }}
             />
             <Button
               variant={"default"}
