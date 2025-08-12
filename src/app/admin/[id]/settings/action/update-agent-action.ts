@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { API_URL } from "@/lib/shared";
 
 export type UpdateAgentActionReturn = {
   message: string;
@@ -35,6 +36,16 @@ export default async function updateAgentAction(
       };
     }
 
+    const res = await fetch(`${API_URL}/collections/${collectionId}/update`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ collection_name: name, description: description }),
+    });
+
+    if (!res.ok) {
+      return { message: "Gagal update collection API", success: false };
+    }
+    
     await prisma.agents.update({
       data: {
         name: name as string,
