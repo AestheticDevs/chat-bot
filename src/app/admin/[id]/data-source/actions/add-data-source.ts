@@ -34,6 +34,8 @@ export default async function addDataSourceAction(formData: FormData) {
 
     const proxyFormData = new FormData();
     proxyFormData.set("file", file);
+    proxyFormData.set("savedAs", saveAs);
+    proxyFormData.set("description", description);
 
     const res = await fetch(
       `${API_URL}/upload?vector_store=qdrant&id_collection=${id_collection}&force_recreate=false`,
@@ -42,7 +44,7 @@ export default async function addDataSourceAction(formData: FormData) {
         body: proxyFormData,
       },
     );
-
+    
     const data = await res.json();
 
     if (!res.ok) {
