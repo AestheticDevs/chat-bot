@@ -18,25 +18,13 @@ import EditDataSourceMetadataDialog from "./edit-data-source-metadata-dialog";
 
 export default async function DataSourceTable({
   collectionId,
-  search,
+  search = "",
 }: {
   collectionId: string;
   search?: string;
 }) {
-  const res = await fetch(`${API_URL}/documents/${collectionId}`);
-  const data = await prisma.data_sources.findMany({
-    where: {
-      id_collection: collectionId,
-      name: {
-        contains: search,
-      },
-    },
-    orderBy: {
-      created_at: "desc",
-    },
-  });
-  const dataSourceApi = await res.json();
-  const documents = dataSourceApi.documents;
+  const resPaginated = await fetch(`${API_URL}/documents-paginated/${collectionId}?search=${search}`);
+  const dataPaginated = await resPaginated.json();
 
   return (
     <div>
@@ -55,8 +43,8 @@ export default async function DataSourceTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.length > 0 ? (
-              data.map((source, i) => (
+            {dataPaginated.documents.length > 0 ? (
+              dataPaginated.documents.map((source: any, i: any) => (
                 <TableRow
                   className="h-14 odd:bg-slate-50 hover:bg-slate-50"
                   key={i}
@@ -66,19 +54,20 @@ export default async function DataSourceTable({
                       {i + 1}
                     </TableCell>
                     <TableCell className="max-w-96 break-words">
-                      <span className="block">{source.name}</span>
+                      <span className="block">{source.filename}</span>
+                      <small className="text-blue-600 block">{source.saved_as}</small>
                       <small className="text-slate-600">{source.description}</small>
                     </TableCell>
                     <TableCell className="text-center">
-                      {source.source_type}
+                      {source.file_type}
                     </TableCell>
                     <TableCell className="text-center">
                       {formatBytes(source.file_size || 0)}
                     </TableCell>
                     <TableCell className="text-center">
-                      {documents[i]?.processing_status == "completed" ? (
+                      {source.processing_status == "completed" ? (
                         <Badge className="bg-teal-500">Trained</Badge>
-                      ) : documents[i]?.processing_status == "failed" ? (
+                      ) : source.processing_status == "failed" ? (
                         <Badge className="bg-red-500">Failed</Badge>
                       ) : (
                         <Badge className="bg-yellow-500">Processing</Badge>
@@ -87,7 +76,7 @@ export default async function DataSourceTable({
                     <TableCell className="text-center">
                       <Button variant={"outline"} className="mr-2" asChild>
                         <a
-                          href={`https://kspstk.layanan.co.id/download/${collectionId}/${source.name}`}
+                          href={`https://kspstk.layanan.co.id/download/${collectionId}/${source.filename}`}
                           download
                         >
                           <DownloadIcon />
@@ -97,13 +86,13 @@ export default async function DataSourceTable({
                       <EditDataSourceMetadataDialog
                         id={source.id.toString()}
                         id_collection={source.id_collection}
-                        nama={source.savedAs}
+                        nama={source.saved_as}
                         description={source.description}
-                        document_id={source.document_id}
+                        document_id={source.id}
                       />
                       <DeleteDataSourceAlert
                         dbId={source.id}
-                        documentId={documents[i]?.id}
+                        documentId={source.id}
                         collectionId={collectionId}
                       />
                     </TableCell>
