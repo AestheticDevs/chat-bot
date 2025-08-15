@@ -80,7 +80,7 @@ export default function ChatHistory({
           </div>
 
           {/* Contacts List */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden">
             {chatSession.length === 0 ? (
               <div className="text-muted-foreground p-4">There are no chat</div>
             ) : null}
@@ -106,7 +106,7 @@ export default function ChatHistory({
                       <span className="mb-1 text-xs text-gray-500">
                         {session.email}
                       </span>
-                      <p className="truncate text-sm text-gray-600">
+                      <p className="w-full text-sm text-gray-600 line-clamp-1">
                         {session.messages[0]?.message}
                       </p>
                     </div>

@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { NextRequest } from "next/server";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*", // atau ganti "*" dengan origin tertentu jika mau restriksi
@@ -35,28 +36,18 @@ export async function POST(req: Request) {
       );
     }
 
-    const existing = await prisma.feedback.findUnique({
-      where: { sessionId },
-    });
-
-    if (existing) {
-      return new Response(
-        JSON.stringify({
-          status: "error",
-          message: "Feedback already exists for this session",
-        }),
-        { status: 409, headers: corsHeaders },
-      );
-    }
-
-    const feedback = await prisma.feedback.create({
-      data: { sessionId, rating, comment },
+    const feedback = await prisma.feedback.upsert({
+      where: {
+        sessionId: sessionId,
+      },
+      create: { sessionId, rating, comment },
+      update: { sessionId, rating, comment },
     });
 
     return new Response(
       JSON.stringify({
         status: "success",
-        message: "Feedback created successfully",
+        message: "Feedback submited successfully",
         result: feedback,
       }),
       { status: 201, headers: corsHeaders },

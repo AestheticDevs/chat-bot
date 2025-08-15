@@ -11,13 +11,15 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import updateChatSettingAction from "./action/update-chat-setting-action";
 import { GenericActionReturn } from "@/types/generic-action-return";
 import { agents, Prisma } from "@prisma/client";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { LoaderIcon, SaveIcon, TriangleAlert } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 
 const initialState: GenericActionReturn = {
   message: "",
@@ -28,12 +30,17 @@ type agentWithSetting = Prisma.agentsGetPayload<{
   include: { setting: true };
 }>;
 
-export default function ChatSettings({ agent }: { agent: agentWithSetting | null }) {
+export default function ChatSettings({
+  agent,
+}: {
+  agent: agentWithSetting | null;
+}) {
   const form = useRef<HTMLFormElement>(null);
   const [state, action, pending] = useActionState(
     updateChatSettingAction,
     initialState,
   );
+  const [limitation, setLimitation] = useState(agent?.setting?.limitation);
 
   function updateSetting() {
     form.current?.requestSubmit();
@@ -66,13 +73,39 @@ export default function ChatSettings({ agent }: { agent: agentWithSetting | null
           </Alert>
         ) : null}
         <form action={action} ref={form} className="grid gap-3">
-          <Label htmlFor="greetings">Sambutan/Greetings</Label>
-          <Textarea
-            id="greetings"
-            placeholder="Ketik sambutan yang akan menyambut pengguna"
-            name="greetings"
-            defaultValue={agent.setting?.greetings}
-          ></Textarea>
+          <div>
+            <Label htmlFor="greetings" className="mb-3">
+              Sambutan/Greetings
+            </Label>
+            <Textarea
+              id="greetings"
+              placeholder="Ketik sambutan yang akan menyambut pengguna"
+              name="greetings"
+              defaultValue={agent.setting?.greetings}
+            ></Textarea>
+          </div>
+          <div>
+            <Label htmlFor="limitation" className="mb-3">
+              Batasi penggunaan
+            </Label>
+            <Switch
+              name="limitation"
+              id="limitation"
+              defaultChecked={agent.setting?.limitation}
+            />
+          </div>
+          <div>
+            <Label htmlFor="usageLimit" className="mb-3">
+              Batasi penggunaan
+            </Label>
+            <Input
+              id="usageLimit"
+              placeholder="Batasi jumlah pertanyaan yang diajukan pengguna"
+              name="usage_limit"
+              defaultValue={agent.setting?.usage_limit}
+            ></Input>
+            <small>Batasi jumlah pertanyaan yang diajukan pengguna</small>
+          </div>
           <input
             type="text"
             name="collectionId"

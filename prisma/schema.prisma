@@ -85,8 +85,10 @@ model setting {
   id           Int     @id @default(autoincrement())
   agent_id     Int     @unique
   agent        agents  @relation(fields: [agent_id], references: [id], onDelete: Cascade)
-  greetings    String
+  greetings    String  @default("Halo ada yang bisa saya bantu")
   leave_taking String?
+  usage_limit  Int     @default(10)
+  limitation   Boolean @default(true)
 }
 
 model chat_session {

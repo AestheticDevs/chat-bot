@@ -3,10 +3,9 @@ import { prisma } from "@/lib/prisma"; // adjust path as needed
 
 export async function POST(req: Request) {
   try {
-    const { name, email, agentId } = await req.json();
+    const { name, email, collectionId } = await req.json();
 
-    console.log(name,email,agentId)
-    if (!name || !email || !agentId) {
+    if (!name || !email || !collectionId) {
       return new Response(
         JSON.stringify({
           status: "error",
@@ -22,14 +21,33 @@ export async function POST(req: Request) {
       );
     }
 
-    const ip = req.headers.get("x-forwarded-for") || "unknown";
+    const agent = await prisma.agents.findFirst({
+      where: { id_collection: collectionId },
+    });
+
+    if (!agent) {
+      return new Response(
+        JSON.stringify({
+          status: "error",
+          message: "Agent not found",
+        }),
+        {
+          status: 422,
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*", // allow all origins
+          },
+        },
+      );
+    }
+
     const userAgent = req.headers.get("user-agent") || null;
 
     const session = await prisma.chat_session.create({
       data: {
         name,
         email,
-        agentId: parseInt(agentId),
+        agentId: agent.id,
         userAgent,
       },
     });

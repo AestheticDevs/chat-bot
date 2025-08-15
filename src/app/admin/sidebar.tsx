@@ -70,7 +70,7 @@ export const SidebarComponent = () => {
       url: `/admin/${currentId}/history`,
       icon: MessageSquareText,
       match: (path: string) =>
-        path.includes("/admin/") && path.endsWith("/inbox"),
+        path.includes("/admin/") && path.endsWith("/history"),
       disable: false,
     },
     {

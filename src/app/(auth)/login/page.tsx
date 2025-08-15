@@ -16,6 +16,7 @@ export default function LoginForm() {
 
     if (result.error) {
       setError(result.error);
+      setLoading(false);
       return;
     }
   };

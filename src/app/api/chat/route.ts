@@ -1,7 +1,13 @@
 import { prisma } from "@/lib/prisma";
 import { API_URL } from "@/lib/shared";
 import { markdownToHtml } from "@/lib/utils";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*", // atau ganti "*" dengan origin tertentu jika mau restriksi
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -20,6 +26,61 @@ export async function POST(req: Request) {
       },
     },
   });
+
+  const agent = await prisma.agents.findFirst({
+    where: {
+      id_collection: id_collection,
+    },
+    include: {
+      setting: true,
+    },
+  });
+
+  if (!chatSession) {
+    return new Response(
+      JSON.stringify({ status: "fail", message: "Session not found" }),
+      {
+        status: 200,
+        headers: corsHeaders,
+      },
+    );
+  }
+
+  if (!agent) {
+    return new Response(
+      JSON.stringify({ status: "fail", message: "Agent not found" }),
+      {
+        status: 200,
+        headers: corsHeaders,
+      },
+    );
+  }
+
+  if (!agent.setting) {
+    return new Response(
+      JSON.stringify({ status: "fail", message: "Setting not found" }),
+      {
+        status: 200,
+        headers: corsHeaders,
+      },
+    );
+  }
+
+  const limitation = agent.setting.limitation;
+  const usageLimit = agent.setting.usage_limit;
+  const usageCount = chatSession.usageCount;
+
+  if (limitation === true) {
+    if (usageCount >= usageLimit) {
+      return new Response(
+        JSON.stringify({ status: "fail", message: "Exceeded limit" }),
+        {
+          status: 200,
+          headers: corsHeaders,
+        },
+      );
+    }
+  }
 
   const history: { question: string; answer: string; date: string }[] = [];
   let pendingQuestion: { message: string; date: string } | null = null;
@@ -57,6 +118,17 @@ export async function POST(req: Request) {
     }),
   });
 
+  if (chatSession) {
+    await prisma.chat_session.update({
+      where: {
+        id: chatSession.id,
+      },
+      data: {
+        usageCount: chatSession.usageCount + 1,
+      },
+    });
+  }
+
   if (!res.ok) {
     const data = await res.json();
 
@@ -79,19 +151,20 @@ export async function POST(req: Request) {
   const answerHtml = await markdownToHtml(data.answer);
   const answer = data.answer || "No answer found";
 
-  await prisma.chat_message.createMany({
-    data: [
-      {
-        sessionId: session_id,
-        sender: "user",
-        message: message,
-      },
-      {
-        sessionId: session_id,
-        sender: "bot",
-        message: answer,
-      },
-    ],
+  await prisma.chat_message.create({
+    data: {
+      sessionId: session_id,
+      sender: "user",
+      message: message,
+    },
+  });
+
+  await prisma.chat_message.create({
+    data: {
+      sessionId: session_id,
+      sender: "bot",
+      message: answer,
+    },
   });
 
   const response = new Response(
@@ -115,7 +188,48 @@ export async function POST(req: Request) {
   return response;
 }
 
-export async function GET(req: Request) {}
+export async function GET(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams;
+  const sessionId = searchParams.get("sessionId");
+
+  if (!sessionId) {
+    return new Response(
+      JSON.stringify({ status: "error", message: "Chat session needed" }),
+      { status: 422, headers: corsHeaders },
+    );
+  }
+
+  try {
+    const data = await prisma.chat_session.findFirst({
+      where: {
+        id: sessionId,
+      },
+      include: {
+        agent: {
+          include: {
+            setting: true,
+          },
+        },
+        feedback: true,
+        messages: {
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
+      },
+    });
+
+    return new Response(JSON.stringify({ status: "success", data }), {
+      status: 200,
+      headers: corsHeaders,
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({ status: "error", message: error }), {
+      status: 422,
+      headers: corsHeaders,
+    });
+  }
+}
 
 export async function OPTIONS() {
   return new Response(null, {

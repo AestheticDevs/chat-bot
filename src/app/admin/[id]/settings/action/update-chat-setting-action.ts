@@ -15,7 +15,7 @@ export default async function updateChatSettingAction(
   try {
     const data = Object.fromEntries(formData.entries());
 
-    const { greetings, agentId, collectionId } = data;
+    const { greetings, agentId, collectionId, usageLimit } = data;
 
     const missingFields: string[] = [];
 
