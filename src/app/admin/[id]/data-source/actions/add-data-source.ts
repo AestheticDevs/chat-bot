@@ -63,6 +63,7 @@ export default async function addDataSourceAction(formData: FormData) {
           name: file.name,
           source_type: file.type,
           file_size: file.size,
+          document_id: data.id_document,
           id_collection: id_collection,
           agent_id: agent.id,
           savedAs: saveAs,
