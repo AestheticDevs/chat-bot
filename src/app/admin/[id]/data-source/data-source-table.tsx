@@ -54,8 +54,8 @@ export default async function DataSourceTable({
                       {i + 1}
                     </TableCell>
                     <TableCell className="max-w-96 break-words">
-                      <span className="block">{source.filename}</span>
-                      <small className="text-blue-600 block">{source.saved_as}</small>
+                      <span className="block font-semibold">{source.saved_as}</span>
+                      <small className="text-blue-600 block">{source.filename}</small>
                       <small className="text-slate-600">{source.description}</small>
                     </TableCell>
                     <TableCell className="text-center">
