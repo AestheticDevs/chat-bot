@@ -95,8 +95,11 @@ export default async function DataSourceTable({
                       </Button>
                       
                       <EditDataSourceMetadataDialog
+                        id={source.id.toString()}
+                        id_collection={source.id_collection}
                         nama={source.savedAs}
                         description={source.description}
+                        document_id={source.document_id}
                       />
                       <DeleteDataSourceAlert
                         dbId={source.id}
