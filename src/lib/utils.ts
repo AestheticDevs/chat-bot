@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { remark } from 'remark';
-import html from 'remark-html';
+import { remark } from "remark";
+import html from "remark-html";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -38,8 +38,52 @@ export function formatBytes(bytes: number, decimals = 2) {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 }
 
-
 export async function markdownToHtml(markdown: string): Promise<string> {
   const result = await remark().use(html).process(markdown);
   return result.toString();
+}
+
+export function getDateRange(
+  type: "week" | "month" | "custom",
+  options?: {
+    startDate?: Date;
+    endDate?: Date;
+  },
+) {
+  const now = new Date();
+
+  if (type === "week") {
+    // Start of this week (Sunday)
+    const startOfThisWeek = new Date(now);
+    startOfThisWeek.setDate(now.getDate() - now.getDay());
+    startOfThisWeek.setHours(0, 0, 0, 0);
+
+    const startOfLastWeek = new Date(startOfThisWeek);
+    startOfLastWeek.setDate(startOfLastWeek.getDate() - 7);
+
+    const endOfLastWeek = new Date(startOfThisWeek);
+
+    return { startOfThisWeek, startOfLastWeek, endOfLastWeek };
+  }
+
+  if (type === "month") {
+    // Start of this month
+    const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    // Start of last month
+    const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    // End of last month = start of this month
+    const endOfLastMonth = new Date(startOfThisMonth);
+
+    return { startOfThisMonth, startOfLastMonth, endOfLastMonth };
+  }
+
+  if (type === "custom" && options?.startDate && options?.endDate) {
+    // Just use the given range
+    const start = new Date(options.startDate);
+    const end = new Date(options.endDate);
+    end.setHours(23, 59, 59, 999); // include full end day
+    return { start, end };
+  }
+
+  throw new Error("Invalid type or missing options");
 }

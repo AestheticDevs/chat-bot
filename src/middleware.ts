@@ -7,7 +7,7 @@ export async function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
   const { pathname } = req.nextUrl;
 
-  let isValid = checkToken(token);
+  let isValid = await checkToken(token);
 
   if (!isValid && pathname.startsWith("/admin")) {
     return NextResponse.redirect(new URL("/login", req.url));

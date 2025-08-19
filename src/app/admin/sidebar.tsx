@@ -2,6 +2,7 @@
 
 import {
   Bot,
+  ChartArea,
   Database,
   Eye,
   LayoutDashboard,
@@ -40,6 +41,14 @@ export const SidebarComponent = () => {
   };
 
   const agentMenus = [
+    {
+      title: "Analytics",
+      url: `/admin/${currentId}/analytics`,
+      icon: ChartArea,
+      match: (path: string) =>
+        path.includes("/admin/") && path.endsWith("/analytics"),
+      disable: false,
+    },
     {
       title: "Preview",
       url: `/admin/${currentId}/preview`,
