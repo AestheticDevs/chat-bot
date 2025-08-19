@@ -11,15 +11,10 @@ model agents {
   id            Int            @id @default(autoincrement())
   name          String         @db.VarChar(100)
   description   String?        @db.Text
-  system_prompt String?        @db.Text
   is_active     Boolean?
   created_at    DateTime?      @default(now()) @db.DateTime(0)
   updated_at    DateTime?      @default(now()) @db.DateTime(0)
   owner_id      Int
-  iframe_title  String?        @db.VarChar(200)
-  iframe_width  String?        @db.VarChar(20)
-  iframe_height String?        @db.VarChar(20)
-  iframe_theme  String?        @db.VarChar(20)
   id_collection String?        @unique @db.VarChar(100)
   users         users          @relation(fields: [owner_id], references: [id], onUpdate: Restrict, map: "agents_ibfk_1")
   data_sources  data_sources[]
@@ -92,20 +87,29 @@ model setting {
   limitation   Boolean @default(true)
 }
 
-model chat_session {
-  id         String         @id @default(uuid())
-  name       String
-  email      String
-  userAgent  String?        @db.Text
-  createdAt  DateTime       @default(now())
-  endedAt    DateTime?
-  agent      agents         @relation(fields: [agentId], references: [id], onDelete: Cascade)
-  agentId    Int
-  usageCount Int            @default(0)
-  messages   chat_message[]
-  feedback   feedback?
+model public_users {
+  id        String         @id @default(uuid())
+  name      String         @db.VarChar(100)
+  email     String         @unique @db.VarChar(100)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @default(now())
+  sessions  chat_session[]
 
   @@index([email])
+}
+
+model chat_session {
+  id           String         @id @default(uuid())
+  createdAt    DateTime       @default(now())
+  endedAt      DateTime?
+  agent        agents         @relation(fields: [agentId], references: [id], onDelete: Cascade)
+  agentId      Int
+  usageCount   Int            @default(0)
+  messages     chat_message[]
+  feedback     feedback?
+  publicUserId String?
+  publicUsers  public_users?  @relation(fields: [publicUserId], references: [id], onDelete: Cascade)
+
   @@index([createdAt])
 }
 
