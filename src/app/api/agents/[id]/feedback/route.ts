@@ -1,9 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { checkToken } from "@/lib/token";
 import { prisma } from "@/lib/prisma";
 
-export async function GET(req: Request, params: Promise<{ id: string }>) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   try {
     // ambil cookie
     const cookieStore = await cookies();
