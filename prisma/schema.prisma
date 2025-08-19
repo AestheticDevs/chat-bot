@@ -51,6 +51,7 @@ model data_sources {
   agent_id      Int
   id_collection String?   @db.VarChar(100)
   description   String?
+  document_id   Int?
   agents        agents    @relation(fields: [agent_id], references: [id], onUpdate: Restrict, map: "data_sources_ibfk_1", onDelete: Cascade)
 
   @@index([agent_id], map: "agent_id")
