@@ -3,10 +3,7 @@ import { cookies } from "next/headers";
 import { checkToken } from "@/lib/token";
 import { prisma } from "@/lib/prisma";
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } },
-) {
+export async function GET(req: Request, params: Promise<{ id: string }>) {
   try {
     // ambil cookie
     const cookieStore = await cookies();
@@ -23,7 +20,7 @@ export async function GET(
     }
 
     // ambil id dari param
-    const agentId = params.id;
+    const agentId = (await params).id;
 
     // ambil search query
     const { searchParams } = new URL(req.url);
