@@ -14,8 +14,7 @@ export default async function updateChatSettingAction(
 ) {
   try {
     const data = Object.fromEntries(formData.entries());
-
-    const { greetings, agentId, collectionId, usageLimit } = data;
+    const { greetings, agentId, collectionId, usageLimit, limitation } = data;
 
     const missingFields: string[] = [];
 
@@ -40,19 +39,25 @@ export default async function updateChatSettingAction(
       };
     }
 
-    await prisma.setting.upsert({
+    const upsert = await prisma.setting.upsert({
       where: {
         agent_id: parseInt(agentId as string),
       },
       create: {
         agent_id: parseInt(agentId as string),
         greetings: greetings as string,
+        limitation: limitation == "on" ? true : false,
+        usage_limit: parseInt(usageLimit as string) || 0,
       },
       update: {
         greetings: greetings as string,
+        limitation: limitation == "on" ? true : false,
+        usage_limit: parseInt(usageLimit as string) || 0,
       },
     });
-
+    console.log("limitation", limitation == "on");
+    console.log("setting", data);
+    console.log("upsert setting", upsert);
     revalidatePath(`/admin/${collectionId}/settings`);
 
     return {

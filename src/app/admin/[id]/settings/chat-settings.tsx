@@ -92,6 +92,7 @@ export default function ChatSettings({
               name="limitation"
               id="limitation"
               defaultChecked={agent.setting?.limitation}
+              onCheckedChange={(checked) => setLimitation(checked)}
             />
           </div>
           <div>
@@ -101,8 +102,9 @@ export default function ChatSettings({
             <Input
               id="usageLimit"
               placeholder="Batasi jumlah pertanyaan yang diajukan pengguna"
-              name="usage_limit"
+              name="usageLimit"
               defaultValue={agent.setting?.usage_limit}
+              disabled={!limitation}
             ></Input>
             <small>Batasi jumlah pertanyaan yang diajukan pengguna</small>
           </div>
