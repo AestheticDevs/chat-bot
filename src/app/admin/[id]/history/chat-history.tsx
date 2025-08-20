@@ -16,11 +16,15 @@ export default function ChatHistory({
   chatSession,
 }: {
   chatSession?: Prisma.chat_sessionGetPayload<{
-    include: { messages: true };
+    include: { messages: true; publicUsers: true };
   }>[];
 }) {
   const [selectedSession, setSelectedSession] =
-    useState<Prisma.chat_sessionGetPayload<{ include: { messages: true } }>>();
+    useState<
+      Prisma.chat_sessionGetPayload<{
+        include: { messages: true; publicUsers: true };
+      }>
+    >();
   const [showSidebar, setShowSidebar] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -30,11 +34,18 @@ export default function ChatHistory({
   }
 
   // Filter contacts based on search term
-  const filteredContacts = chatSession.filter(
-    (contact) =>
-      contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact.email.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const filteredContacts = chatSession.filter((contact) => {
+    if (contact.publicUsers) {
+      return (
+        contact.publicUsers.name
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        contact.publicUsers.email
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
+      );
+    }
+  });
 
   // Calculate pagination
   const totalPages = Math.ceil(chatSession.length / CONTACTS_PER_PAGE);
@@ -80,7 +91,7 @@ export default function ChatHistory({
           </div>
 
           {/* Contacts List */}
-          <div className="flex-1 overflow-y-auto overflow-x-hidden">
+          <div className="flex-1 overflow-x-hidden overflow-y-auto">
             {chatSession.length === 0 ? (
               <div className="text-muted-foreground p-4">There are no chat</div>
             ) : null}
@@ -95,7 +106,7 @@ export default function ChatHistory({
                 <div className="min-w-0 flex-1">
                   <div className="mb-1 flex items-center justify-between">
                     <h3 className="truncate font-medium text-gray-900">
-                      {session.name}
+                      {session.publicUsers?.name}
                     </h3>
                     <span className="text-xs text-gray-500">
                       {/* {session.email} */}
@@ -104,9 +115,9 @@ export default function ChatHistory({
                   <div className="flex items-center justify-between">
                     <div className="flex flex-col">
                       <span className="mb-1 text-xs text-gray-500">
-                        {session.email}
+                        {session.publicUsers?.email}
                       </span>
-                      <p className="w-full text-sm text-gray-600 line-clamp-1">
+                      <p className="line-clamp-1 w-full text-sm text-gray-600">
                         {session.messages[0]?.message}
                       </p>
                     </div>
@@ -171,10 +182,10 @@ export default function ChatHistory({
               </Button>
               <div>
                 <h2 className="font-medium text-gray-900">
-                  {selectedSession?.name}
+                  {selectedSession?.publicUsers?.name}
                 </h2>
                 <p className="text-sm text-gray-500">
-                  {selectedSession?.email}
+                  {selectedSession?.publicUsers?.email}
                 </p>
               </div>
             </div>

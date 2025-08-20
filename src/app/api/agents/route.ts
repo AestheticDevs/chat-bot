@@ -57,14 +57,13 @@ export async function POST(req: Request) {
     const userId = payload.id as string; // id dari token
 
     const body = await req.json();
-    const { name, description, system_prompt } = body;
+    const { name, description } = body;
 
     // Insert ke table agents
     const newAgent = await prisma.agents.create({
       data: {
         name,
         description,
-        system_prompt,
         is_active: true,
         owner_id: Number(userId),
       },
