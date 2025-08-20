@@ -38,7 +38,7 @@ export async function createAgentAction(prevState: any, formData?: FormData) {
   console.log("Response from API:", res.ok);
 
   if (!res.ok) {
-    const data = (await res.json());
+    const data = await res.json();
     console.error("Error creating collection:", data);
     return {
       message: "Failed to create collection",
@@ -58,6 +58,14 @@ export async function createAgentAction(prevState: any, formData?: FormData) {
         id_collection: data.id_collection,
         is_active: true,
         owner_id: user.id,
+        setting: {
+          create: {
+            limitation: true,
+            usage_limit: 10,
+            greetings:
+              "Hai sobat KSPSTK saya adalah asisten AI yang siap membantu Anda.",
+          },
+        },
       },
     });
     revalidatePath("/admin/dashboard");
