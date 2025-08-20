@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
+    
     // Verifikasi token
     const { payload } = await jwtVerify(token, JWT_SECRET);
     const userId = payload.id as string; // id dari token

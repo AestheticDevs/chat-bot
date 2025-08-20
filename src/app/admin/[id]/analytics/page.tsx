@@ -21,6 +21,12 @@ export default async function AnalyticsDashboard({
     getDateRange("week");
   const { startOfThisMonth } = getDateRange("month");
 
+  const agent = await prisma.agents.findFirst({
+    where: {
+      id_collection: id,
+    },
+  });
+
   const [thisMonthData, lastWeekData, thisWeekCount, lastWeekCount, count] =
     await Promise.all([
       prisma.chat_session.findMany({
@@ -28,6 +34,7 @@ export default async function AnalyticsDashboard({
           createdAt: {
             gte: startOfThisMonth,
           },
+          agentId: agent?.id,
         },
         include: {
           messages: true,
@@ -42,6 +49,7 @@ export default async function AnalyticsDashboard({
             gte: startOfLastWeek,
             lt: endOfLastWeek,
           },
+          agentId: agent?.id,
         },
         include: {
           messages: true,
@@ -55,6 +63,7 @@ export default async function AnalyticsDashboard({
           createdAt: {
             gte: startOfThisWeek,
           },
+          agentId: agent?.id,
         },
       }),
       prisma.chat_session.count({
@@ -63,6 +72,7 @@ export default async function AnalyticsDashboard({
             gte: startOfLastWeek,
             lt: endOfLastWeek,
           },
+          agentId: agent?.id,
         },
       }),
       prisma.chat_session.count(),
@@ -73,14 +83,12 @@ export default async function AnalyticsDashboard({
       createdAt: {
         gte: startOfThisMonth,
       },
+      session: {
+        agentId: agent?.id,
+      },
     },
     orderBy: {
       createdAt: "desc",
-    },
-  });
-  const agent = await prisma.agents.findFirst({
-    where: {
-      id_collection: id,
     },
   });
 

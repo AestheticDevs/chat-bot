@@ -142,7 +142,7 @@ enum MessageType {
 
 model feedback {
   id        String        @id @default(uuid())
-  session   chat_session? @relation(fields: [sessionId], references: [id])
+  session   chat_session? @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   sessionId String        @unique
 
   rating  Int? // e.g., 1-5 star rating
