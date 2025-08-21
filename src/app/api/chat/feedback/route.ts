@@ -16,7 +16,7 @@ export async function OPTIONS() {
 
 export async function POST(req: Request) {
   try {
-    const { sessionId, rating, comment } = await req.json();
+    const { sessionId, messageId, rating, comment } = await req.json();
 
     if (!sessionId) {
       return new Response(
@@ -37,11 +37,12 @@ export async function POST(req: Request) {
     }
 
     const feedback = await prisma.feedback.upsert({
-      where: {
+      where: { 
         sessionId: sessionId,
+        messageId: messageId,
       },
-      create: { sessionId, rating, comment },
-      update: { sessionId, rating, comment },
+      create: { sessionId, messageId, rating, comment },
+      update: { rating, comment },
     });
 
     return new Response(

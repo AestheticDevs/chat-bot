@@ -3,16 +3,16 @@ import Script from "next/script";
 
 export default function Home() {
   return (
-    <section className="relative flex h-full flex-col">
+    <section className="relative flex h-full flex-col px-4">
       <div className="container mx-auto my-auto text-center xl:mt-auto xl:mb-0">
-        <h3 className="mb-6 text-[42px] leading-[1.2] font-bold text-slate-800">
+        <h3 className="mb-6 text-2xl lg:text-[42px] leading-[1.2] font-bold text-slate-800">
           Asisten AI{" "}
           <span className="from-secondary-brand to-accent-brand inline-block bg-gradient-to-br bg-clip-text text-transparent">
             Cerdas
           </span>{" "}
           <br /> Siap Membantu Kebutuhan Anda
         </h3>
-        <p className="m-auto mt-3 mb-4 w-2/3 text-slate-600">
+        <p className="m-auto mt-3 mb-4 lg:w-2/3 text-slate-600 max-sm:font-medium">
           Dapatkan jawaban cepat dan akurat kapan saja. Chatbot AI kami siap
           membantu menjawab pertanyaan, memberikan informasi, dan meningkatkan
           efisiensi layanan Anda secara profesional.
@@ -20,14 +20,14 @@ export default function Home() {
         <Image
           alt=""
           src={"/bg-img-landing.png"}
-          className="absolute top-0 left-0 -z-10 w-full"
+          className="absolute top-0 left-0 bottom-0 -z-10 w-full max-sm:object-cover"
           fill
           unoptimized
         />
         <Image
           alt=""
           src={"/hero-img.png"}
-          className="mt-auto w-full"
+          className="mt-auto w-full max-sm:hidden"
           width={400}
           height={400}
           unoptimized

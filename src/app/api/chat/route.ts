@@ -218,11 +218,30 @@ export async function GET(req: NextRequest) {
         },
       },
     });
+    
+    const messageData = await Promise.all(
+      data?.messages.map(async (msg) => ({
+        ...msg,
+        messageHtml:
+          msg.sender === "bot"
+            ? await markdownToHtml(msg.message)
+            : msg.message,
+      })) ?? [],
+    );
 
-    return new Response(JSON.stringify({ status: "success", data }), {
-      status: 200,
-      headers: corsHeaders,
-    });
+    return new Response(
+      JSON.stringify({
+        status: "success",
+        data: {
+          ...data,
+          messages: messageData,
+        },
+      }),
+      {
+        status: 200,
+        headers: corsHeaders,
+      },
+    );
   } catch (error) {
     return new Response(JSON.stringify({ status: "error", message: error }), {
       status: 422,

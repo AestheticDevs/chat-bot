@@ -106,7 +106,7 @@ model chat_session {
   agentId      Int
   usageCount   Int            @default(0)
   messages     chat_message[]
-  feedback     feedback?
+  feedback     feedback[]
   publicUserId String?
   publicUsers  public_users?  @relation(fields: [publicUserId], references: [id], onDelete: Cascade)
 
@@ -123,6 +123,7 @@ model chat_message {
   messageType MessageType @default(TEXT)
   metadata    Json?
   createdAt   DateTime    @default(now())
+  feedback    feedback?
 
   @@index([sessionId])
   @@index([createdAt])
@@ -143,7 +144,9 @@ enum MessageType {
 model feedback {
   id        String        @id @default(uuid())
   session   chat_session? @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  sessionId String        @unique
+  messageId String?       @unique
+  message   chat_message? @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  sessionId String
 
   rating  Int? // e.g., 1-5 star rating
   comment String? @db.Text

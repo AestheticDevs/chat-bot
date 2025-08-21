@@ -111,6 +111,7 @@ function Conversation({
   const bottomDivRef = useRef<HTMLDivElement>(null);
 
   function formAction(formData: FormData) {
+    console.log("formData", formData);
     const memory = conversationOptimistic.slice(-10).map((item) => {
       return {
         question: item.question,
@@ -119,7 +120,6 @@ function Conversation({
       };
     });
 
-    setLoading(true);
     addOptimisticConversation(formData.get("question") as string);
     formRef.current?.reset();
     startTransition(async () => {
@@ -162,7 +162,14 @@ function Conversation({
         <div ref={bottomDivRef}></div>
       </div>
 
-      <form action={formAction} ref={formRef} className="p-8 pt-2">
+      <form
+        action={formAction}
+        onSubmit={() => {
+          setLoading(true);
+        }}
+        ref={formRef}
+        className="p-8 pt-2"
+      >
         <div>
           <div className="flex items-start gap-2 rounded-lg border pr-4">
             <AutosizeTextarea
