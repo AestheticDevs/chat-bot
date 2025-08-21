@@ -12,8 +12,11 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Chatbot",
+  title: "Chatbot KSPSTK",
   description: "A Modular Chatbot for Your Any Project",
+  icons: {
+    icon: "/logo.svg",
+  },
 };
 
 export default function RootLayout({

@@ -106,7 +106,6 @@ export const Header = () => {
               <Link href="/login">
                 <Button variant={"accent"}>Sign In</Button>
               </Link>
-              <Button>Register</Button>
             </nav>
           )}
         </div>
