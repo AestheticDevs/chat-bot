@@ -104,10 +104,9 @@ export const Header = () => {
             </DropdownMenu>
           ) : (
             <nav className="flex space-x-1">
-              <Link href="/login">
+              {/* <Link href="/login">
                 <Button variant={"accent"}>Sign In</Button>
-              </Link>
-              <Button>Register</Button>
+              </Link> */}
             </nav>
           )}
         </div>

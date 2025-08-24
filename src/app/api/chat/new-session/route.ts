@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma"; // adjust path as needed
+import { toZonedTime } from "date-fns-tz";
 
 export async function POST(req: Request) {
   try {
@@ -48,7 +49,7 @@ export async function POST(req: Request) {
     });
 
     const now = new Date();
-    const endedAt = new Date(
+    const jakartaEnd = new Date(
       now.getFullYear(),
       now.getMonth(),
       now.getDate(),
@@ -56,6 +57,7 @@ export async function POST(req: Request) {
       59,
       0,
     );
+    const endedAt = toZonedTime(jakartaEnd, "Asia/Jakarta");
 
     if (!public_user) {
       const public_user = await prisma.public_users.create({
@@ -69,7 +71,7 @@ export async function POST(req: Request) {
         data: {
           agentId: agent.id,
           publicUserId: public_user.id,
-          endedAt: endedAt,
+          endedAt: endedAt.toISOString(),
         },
       });
 
