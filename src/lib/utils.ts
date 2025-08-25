@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { remark } from "remark";
 import html from "remark-html";
+import gfm from "remark-gfm";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -39,7 +40,7 @@ export function formatBytes(bytes: number, decimals = 2) {
 }
 
 export async function markdownToHtml(markdown: string): Promise<string> {
-  const result = await remark().use(html).process(markdown);
+  const result = await remark().use(html).use(gfm).process(markdown);
   return result.toString();
 }
 

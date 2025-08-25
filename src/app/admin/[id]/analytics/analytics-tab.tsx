@@ -27,6 +27,7 @@ import { Prisma } from "@prisma/client";
 import { format } from "date-fns"; // makes date -> "YYYY-MM-DD"
 import { CustomTooltip } from "./custom-tooltip";
 import FeedbackTable from "./feedback-table";
+import SessionTable from "./session-table";
 
 type AgentPayload = Prisma.agentsGetPayload<{}> | null;
 
@@ -206,6 +207,7 @@ export default function AnalyticsTab({
               </ResponsiveContainer>
             </CardContent>
           </Card>
+          <SessionTable data={trendPenggunaan} />
         </div>
       </TabsContent>
 
