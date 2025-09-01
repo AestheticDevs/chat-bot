@@ -10,7 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Prisma } from "@prisma/client";
 import { markdownToHtml } from "@/lib/utils";
 
-const CONTACTS_PER_PAGE = 6;
+const CONTACTS_PER_PAGE = 10;
 
 export default function ChatHistory({
   chatSession,
@@ -19,12 +19,11 @@ export default function ChatHistory({
     include: { messages: true; publicUsers: true };
   }>[];
 }) {
-  const [selectedSession, setSelectedSession] =
-    useState<
-      Prisma.chat_sessionGetPayload<{
-        include: { messages: true; publicUsers: true };
-      }>
-    >();
+  const [selectedSession, setSelectedSession] = useState<
+    Prisma.chat_sessionGetPayload<{
+      include: { messages: true; publicUsers: true };
+    }>
+  >();
   const [showSidebar, setShowSidebar] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -61,21 +60,12 @@ export default function ChatHistory({
     setSearchTerm(e.target.value);
     setCurrentPage(1); // Reset to first page when searching
   };
-
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    });
-  };
-
   return (
-    <Card className="h-full">
-      <CardContent className="flex h-full">
+    <Card className="flex max-h-full grow flex-col overflow-y-scroll p-0">
+      <CardContent className="flex grow overflow-y-scroll px-0">
         {/* Sidebar */}
         <div
-          className={`${showSidebar ? "w-80" : "w-0"} flex flex-col overflow-hidden border-r border-gray-200 bg-white transition-all duration-300`}
+          className={`${showSidebar ? "w-80" : "w-0"} flex flex-col overflow-y-scroll border-r border-gray-200 bg-white transition-all duration-300`}
         >
           {/* Search */}
           <div className="bg-gray-50 p-3">
@@ -95,7 +85,7 @@ export default function ChatHistory({
             {chatSession.length === 0 ? (
               <div className="text-muted-foreground p-4">There are no chat</div>
             ) : null}
-            {chatSession?.map((session) => (
+            {currentContacts?.map((session) => (
               <div
                 key={session.id}
                 onClick={() => setSelectedSession(session)}
@@ -106,19 +96,16 @@ export default function ChatHistory({
                 <div className="min-w-0 flex-1">
                   <div className="mb-1 flex items-center justify-between">
                     <h3 className="truncate font-medium text-gray-900">
-                      {session.publicUsers?.name}
+                      {session.publicUsers?.name} ({session.messages.length})
                     </h3>
-                    <span className="text-xs text-gray-500">
-                      {/* {session.email} */}
-                    </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex flex-col">
                       <span className="mb-1 text-xs text-gray-500">
                         {session.publicUsers?.email}
                       </span>
-                      <p className="line-clamp-1 w-full text-sm text-gray-600">
-                        {session.messages[0]?.message}
+                      <p className="line-clamp-1 w-full text-xs text-gray-600">
+                        {session.createdAt.toLocaleDateString()}
                       </p>
                     </div>
                   </div>
@@ -168,7 +155,7 @@ export default function ChatHistory({
         </div>
 
         {/* Main Chat Area */}
-        <div className="flex flex-1 flex-col">
+        <div className="flex flex-1 grow flex-col">
           {/* Chat Header */}
           <div className="flex items-center justify-between border-b border-gray-200 bg-[#f0f2f5] p-3">
             <div className="flex h-10 items-center">

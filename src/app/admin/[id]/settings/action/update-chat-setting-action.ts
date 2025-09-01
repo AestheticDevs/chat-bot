@@ -55,9 +55,6 @@ export default async function updateChatSettingAction(
         usage_limit: parseInt(usageLimit as string) || 0,
       },
     });
-    console.log("limitation", limitation == "on");
-    console.log("setting", data);
-    console.log("upsert setting", upsert);
     revalidatePath(`/admin/${collectionId}/settings`);
 
     return {

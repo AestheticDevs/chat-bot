@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Star } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 type Feedback = {
   id: string;
@@ -19,6 +20,7 @@ type Feedback = {
 };
 
 export default function FeedbackTable({ agentId }: { agentId: string | null }) {
+  const searchParams = useSearchParams();
   const [data, setData] = React.useState<Feedback[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
@@ -31,10 +33,22 @@ export default function FeedbackTable({ agentId }: { agentId: string | null }) {
     async function loadFeedback() {
       try {
         setLoading(true);
+
+        const paramObj = {
+          page: page.toString(),
+          limit: "10",
+          ...(searchParams.get("from")
+            ? { from: searchParams.get("from")! }
+            : {}),
+          ...(searchParams.get("to") ? { to: searchParams.get("to")! } : {}),
+        };
+        const urlParams = new URLSearchParams(paramObj);
+
         const res = await fetch(
-          `/api/agents/${agentId}/feedback?page=${page}&limit=10`,
+          `/api/agents/${agentId}/feedback?${urlParams.toString()}`,
           { credentials: "include" },
         );
+        
         if (!res.ok) throw new Error("Failed to fetch feedback");
         const json = await res.json();
         setData(json.data);
@@ -90,6 +104,13 @@ export default function FeedbackTable({ agentId }: { agentId: string | null }) {
               </TableCell>
             </TableRow>
           ))}
+          {data.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={3} className="h-24 text-center">
+                No results.
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
 

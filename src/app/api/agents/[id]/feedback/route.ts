@@ -29,6 +29,12 @@ export async function GET(
     const { searchParams } = new URL(req.url);
     const page = Number(searchParams.get("page") || 1);
     const limit = Number(searchParams.get("limit") || 10);
+    const from = searchParams.get("from")
+      ? new Date(searchParams.get("from") as string)
+      : new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    const to = searchParams.get("to")
+      ? new Date(searchParams.get("to") as string)
+      : new Date();
 
     const skip = (page - 1) * limit;
 
@@ -38,6 +44,10 @@ export async function GET(
         where: {
           session: {
             agentId: parseInt(agentId),
+          },
+          createdAt: {
+            gte: from,
+            lte: to,
           },
         },
         skip,
