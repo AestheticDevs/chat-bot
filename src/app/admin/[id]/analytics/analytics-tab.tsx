@@ -111,7 +111,7 @@ export default function AnalyticsTab({
           <Card>
             <CardHeader>
               <CardTitle>Trend Penggunaan</CardTitle>
-              <CardDescription>Penggunaan harian minggu ini</CardDescription>
+              <CardDescription>Penggunaan harian bulan ini</CardDescription>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
