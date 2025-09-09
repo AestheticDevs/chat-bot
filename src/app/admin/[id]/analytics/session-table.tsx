@@ -42,7 +42,7 @@ export default function SessionTable({
             <TableHeader>
               <TableRow>
                 <TableHead className="px-4 py-2 text-left">Tanggal</TableHead>
-                <TableHead className="px-4 py-2 text-right">Sesi</TableHead>
+                <TableHead className="px-4 py-2 text-right">Jumlah Sesi</TableHead>
                 <TableHead className="px-4 py-2 text-right">
                   Pertanyaan
                 </TableHead>

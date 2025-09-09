@@ -11,12 +11,18 @@ import {
 } from "@/components/ui/table";
 import { Star } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { Prisma } from "@prisma/client";
 
 type Feedback = {
   id: string;
   rating: number | null;
   comment: string | null;
   createdAt: string;
+  session: Prisma.chat_sessionGetPayload<{
+    include: {
+      publicUsers: true;
+    };
+  }>;
 };
 
 export default function FeedbackTable({ agentId }: { agentId: string | null }) {
@@ -48,7 +54,7 @@ export default function FeedbackTable({ agentId }: { agentId: string | null }) {
           `/api/agents/${agentId}/feedback?${urlParams.toString()}`,
           { credentials: "include" },
         );
-        
+
         if (!res.ok) throw new Error("Failed to fetch feedback");
         const json = await res.json();
         setData(json.data);
@@ -70,7 +76,8 @@ export default function FeedbackTable({ agentId }: { agentId: string | null }) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Rating</TableHead>
+            <TableHead className="w-60">Rating</TableHead>
+            <TableHead>Sesi</TableHead>
             <TableHead>Pesan</TableHead>
             <TableHead>Date</TableHead>
           </TableRow>
@@ -97,6 +104,10 @@ export default function FeedbackTable({ agentId }: { agentId: string | null }) {
                     {f.rating} star{(f.rating ?? 0) > 1 ? "s" : ""}
                   </span>
                 </div>
+              </TableCell>
+              <TableCell>
+                <p className="font-semibold">{f.session.publicUsers?.name}</p>
+                <small>{f.session.publicUsers?.email}</small>
               </TableCell>
               <TableCell>{f.comment ?? "-"}</TableCell>
               <TableCell>

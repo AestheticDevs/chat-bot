@@ -38,8 +38,8 @@ export default function Home() {
         async
         src="https://embed.supergpt.id/widget.js?v=16"
         data-collection-id="ff3dc560dba9"
-        data-position-x="left"
-        data-position-y="top"
+        // data-position-x="left"
+        // data-position-y="top"
         data-offset-x="20"
         data-offset-y="20"
       />

@@ -50,6 +50,13 @@ export async function GET(
             lte: to,
           },
         },
+        include: {
+          session: {
+            include: {
+              publicUsers: true,
+            },
+          },
+        },
         skip,
         take: limit,
         orderBy: { createdAt: "desc" },
